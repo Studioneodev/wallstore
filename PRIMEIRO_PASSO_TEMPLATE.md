@@ -24,7 +24,7 @@ INFRAESTRUTURA PREPARADA:
 - Arquivo: COMECE_AQUI.md lido e entendido
 
 ✅ Vercel
-- Projeto conectado: https://vercel.com/studioneodevs-projects
+- Projeto conectado: https://wallstore-henna.vercel.app
 - Deploy automático: ATIVO
 
 ✅ Supabase  

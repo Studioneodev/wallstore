@@ -5,7 +5,12 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import GalleryPage from './pages/GalleryPage'
-import AdminPage from './pages/AdminPage'
+import AdminLayout from './components/admin/AdminLayout'
+import DashboardPage from './pages/admin/DashboardPage'
+import WallpapersPage from './pages/admin/WallpapersPage'
+import ChatIAPage from './pages/admin/ChatIAPage'
+import GerarImagensPage from './pages/admin/GerarImagensPage'
+import VendasPage from './pages/admin/VendasPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -21,10 +26,16 @@ function App() {
             path="/admin" 
             element={
               <ProtectedRoute requireAdmin={true}>
-                <AdminPage />
+                <AdminLayout />
               </ProtectedRoute>
-            } 
-          />
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="wallpapers" element={<WallpapersPage />} />
+            <Route path="chat-ia" element={<ChatIAPage />} />
+            <Route path="gerar-imagens" element={<GerarImagensPage />} />
+            <Route path="vendas" element={<VendasPage />} />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
