@@ -21,6 +21,7 @@ function Header({ onOpenCart }) {
           </div>
           {user ? (
             <>
+              <Link to="/my-orders" style={{ color: '#374151', fontWeight: '500' }}>Meus Pedidos</Link>
               <Link to="/admin" style={{ color: '#6366f1', fontWeight: '500' }}>Admin</Link>
               <button 
                 onClick={signOut}

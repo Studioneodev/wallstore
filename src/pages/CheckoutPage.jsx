@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
+import { orderService } from '../services/orderService'
 import Header from '../components/shared/Header'
 import Footer from '../components/shared/Footer'
+import Cart from '../components/client/Cart'
 
 function CheckoutPage() {
   const { user } = useAuth()
   const { items, getTotalPrice, clearCart } = useCart()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const [pixKey] = useState('sua-chave-pix-aqui') // Configure sua chave PIX
+  const [pixKey] = useState('sua-chave-pix-aqui')
 
   const total = getTotalPrice()
 
@@ -21,18 +23,37 @@ function CheckoutPage() {
     }
     
     setLoading(true)
-    // Simulação - na Fase 7 integração PIX real
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    alert(`Pedido criado! Total: R$ ${total.toFixed(2)}\n\nChave PIX: ${pixKey}\n\nEm Fase 7 implementaremos o pagamentoPIX real.`)
-    clearCart()
-    setLoading(false)
-    navigate('/')
+    
+    try {
+      const order = {
+        user_id: user.id,
+        total_amount: total,
+        status: 'pending',
+        items: items.map(item => ({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+          image_url: item.image_url
+        })),
+        pix_key: pixKey
+      }
+
+      await orderService.create(order)
+      clearCart()
+      alert('Pedido criado com sucesso! Aguarde confirmação do pagamento.')
+      navigate('/my-orders')
+    } catch (err) {
+      alert('Erro ao criar pedido: ' + err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (items.length === 0) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Header />
+        <Header onOpenCart={() => {}} />
         <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ textAlign: 'center' }}>
             <h1 style={{ marginBottom: '16px' }}>Carrinho vazio</h1>
@@ -46,7 +67,7 @@ function CheckoutPage() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
+      <Header onOpenCart={() => {}} />
       
       <main style={{ flex: 1, padding: '40px 20px', backgroundColor: '#f9fafb' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
@@ -87,7 +108,7 @@ function CheckoutPage() {
               </div>
 
               <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '16px' }}>
-                Após paymento, seu wallpaper será enviado por email.
+                Após pagamento, seu wallpaper será enviado por email.
               </p>
 
               <button onClick={handleConfirm} disabled={loading} className="btn btn-primary" style={{ width: '100%' }}>

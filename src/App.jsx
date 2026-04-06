@@ -14,6 +14,7 @@ import GerarImagensPage from './pages/admin/GerarImagensPage'
 import VendasPage from './pages/admin/VendasPage'
 import NotFoundPage from './pages/NotFoundPage'
 import CheckoutPage from './pages/CheckoutPage'
+import MyOrdersPage from './pages/MyOrdersPage'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/my-orders" element={<MyOrdersPage />} />
             <Route 
               path="/admin" 
               element={
