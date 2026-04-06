@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import WallpaperForm from '../../components/admin/WallpaperForm'
 import WallpaperList from '../../components/admin/WallpaperList'
 
 function WallpapersPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingWallpaper, setEditingWallpaper] = useState(null)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   function handleEdit(wallpaper) {
     setEditingWallpaper(wallpaper)
@@ -14,6 +15,7 @@ function WallpapersPage() {
   function handleSave() {
     setShowForm(false)
     setEditingWallpaper(null)
+    setRefreshKey(prev => prev + 1)
   }
 
   function handleCancel() {
@@ -42,7 +44,10 @@ function WallpapersPage() {
           onCancel={handleCancel} 
         />
       ) : (
-        <WallpaperList onEdit={handleEdit} />
+        <WallpaperList 
+          key={refreshKey}
+          onEdit={handleEdit} 
+        />
       )}
     </div>
   )

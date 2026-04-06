@@ -16,9 +16,11 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
   const [category, setCategory] = useState(wallpaper?.category || 'landscapes')
   const [price, setPrice] = useState(wallpaper?.price || '')
   const [image, setImage] = useState(null)
+  const [imageUrl, setImageUrl] = useState(wallpaper?.image_url || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [useUrl, setUseUrl] = useState(!!wallpaper?.image_url)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -26,15 +28,19 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
     setError('')
 
     try {
-      let imageUrl = wallpaper?.image_url
-      let imagePath = wallpaper?.image_path
+      let finalImageUrl = imageUrl
+      let finalImagePath = wallpaper?.image_path
 
       if (image) {
         setUploading(true)
         const result = await wallpaperService.uploadImage(image)
-        imageUrl = result.publicUrl
-        imagePath = result.filePath
+        finalImageUrl = result.publicUrl
+        finalImagePath = result.filePath
         setUploading(false)
+      }
+
+      if (!finalImageUrl) {
+        throw new Error('Imagem é obrigatória')
       }
 
       const data = {
@@ -42,8 +48,8 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
         description,
         category,
         price: parseFloat(price),
-        image_url: imageUrl,
-        image_path: imagePath,
+        image_url: finalImageUrl,
+        image_path: finalImagePath,
       }
 
       if (wallpaper?.id) {
@@ -74,12 +80,13 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
 
       <div style={{ display: 'grid', gap: '16px' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Título</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Título *</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            placeholder="Ex: Pôr do sol nas montanhas"
             style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
           />
         </div>
@@ -90,12 +97,13 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
+            placeholder="Descrição do wallpaper..."
             style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Categoria</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Categoria *</label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -108,7 +116,7 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Preço (R$)</label>
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Preço (R$) *</label>
           <input
             type="number"
             step="0.01"
@@ -116,24 +124,59 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
+            placeholder="9.90"
             style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Imagem</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
-          />
-          {wallpaper?.image_url && (
-            <img 
-              src={wallpaper.image_url} 
-              alt={wallpaper.title}
-              style={{ width: '100px', marginTop: '10px', borderRadius: '8px' }}
+          <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500' }}>Imagem *</label>
+          
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input 
+                type="radio" 
+                checked={!useUrl} 
+                onChange={() => setUseUrl(false)} 
+              />
+              Upload de arquivo
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input 
+                type="radio" 
+                checked={useUrl} 
+                onChange={() => setUseUrl(true)} 
+              />
+              URL da imagem
+            </label>
+          </div>
+
+          {useUrl ? (
+            <input
+              type="url"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://exemplo.com/imagem.jpg"
+              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
             />
+          ) : (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}
+            />
+          )}
+          
+          {wallpaper?.image_url && (
+            <div style={{ marginTop: '12px' }}>
+              <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '8px' }}>Imagem atual:</p>
+              <img 
+                src={wallpaper.image_url} 
+                alt={wallpaper.title}
+                style={{ width: '150px', borderRadius: '8px' }}
+              />
+            </div>
           )}
         </div>
 
@@ -143,7 +186,7 @@ function WallpaperForm({ wallpaper, onSave, onCancel }) {
             disabled={loading || uploading}
             className="btn btn-primary"
           >
-            {loading || uploading ? 'Salvando...' : 'Salvar'}
+            {loading || uploading ? 'Salvando...' : 'Salvar Wallpaper'}
           </button>
           <button
             type="button"
