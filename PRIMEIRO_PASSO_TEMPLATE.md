@@ -28,9 +28,9 @@ INFRAESTRUTURA PREPARADA:
 - Deploy automático: ATIVO
 
 ✅ Supabase  
-- Projeto criado
-- URL: https://[projeto].supabase.co
-- ANON_KEY: [cole aqui]
+- Projeto criado: https://aiiwxykaewarbpltdxdl.supabase.co
+- URL: https://aiiwxykaewarbpltdxdl.supabase.co
+- ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ✅ Credenciais (armazenadas seguramente em .env.local - NÃO será commitada)
 - Minimax API Key: [fornecida/obtida]

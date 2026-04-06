@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import Header from '../components/shared/Header'
 import Footer from '../components/shared/Footer'
 
@@ -7,14 +8,23 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { signIn } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setLoading(false)
-    alert('Fase 2: Autenticação ainda não implementada')
+    setError('')
+    
+    try {
+      await signIn(email, password)
+      navigate('/admin')
+    } catch (err) {
+      setError(err.message || 'Erro ao fazer login')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -24,6 +34,12 @@ function LoginPage() {
       <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
         <div style={{ backgroundColor: 'white', padding: '40px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
           <h1 style={{ fontSize: '1.75rem', marginBottom: '24px', textAlign: 'center' }}>Login</h1>
+          
+          {error && (
+            <div style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
+              {error}
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
