@@ -1,13 +1,17 @@
-import { supabase } from './supabaseClient'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export const wallpaperService = {
   async getAll() {
     const { data, error } = await supabase
       .from('wallpapers')
       .select('*')
-      .order('created_at', { ascending: false })
     if (error) throw error
-    return data
+    return data || []
   },
 
   async getActive() {
@@ -15,34 +19,30 @@ export const wallpaperService = {
       .from('wallpapers')
       .select('*')
       .eq('is_active', true)
-      .order('created_at', { ascending: false })
     if (error) throw error
-    return data
-  },
-
-  async getById(id) {
-    const { data, error } = await supabase
-      .from('wallpapers')
-      .select('*')
-      .eq('id', id)
-      .single()
-    if (error) throw error
-    return data
+    return data || []
   },
 
   async create(wallpaper) {
+    console.log('Creating wallpaper:', wallpaper)
+    
     const { data, error } = await supabase
       .from('wallpapers')
       .insert([wallpaper])
       .select()
-    if (error) throw error
+    
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
     return data[0]
   },
 
   async update(id, wallpaper) {
     const { data, error } = await supabase
       .from('wallpapers')
-      .update({ ...wallpaper, updated_at: new Date() })
+      .update(wallpaper)
       .eq('id', id)
       .select()
     if (error) throw error
@@ -67,17 +67,10 @@ export const wallpaperService = {
     
     if (error) throw error
     
-    const { data: { publicUrl } } = supabase.storage
+    const { data: urlData } = supabase.storage
       .from('wallpapers')
       .getPublicUrl(filePath)
     
-    return { publicUrl, filePath }
-  },
-
-  async deleteImage(filePath) {
-    const { error } = await supabase.storage
-      .from('wallpapers')
-      .remove([filePath])
-    if (error) throw error
+    return { publicUrl: urlData.publicUrl, filePath }
   }
 }
