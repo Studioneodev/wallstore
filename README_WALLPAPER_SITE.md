@@ -102,14 +102,16 @@ wallstore/
 ### ⏱️ FASE 1: FUNDAÇÃO (Semana 1)
 **Objetivo:** Estrutura básica funcional
 
-- [ ] Projeto criado no Open Code (Antigravity)
-- [ ] Configuração Supabase (autenticação)
-- [ ] Estrutura de pastas criada
-- [ ] Home page básica (sem login ainda)
-- [ ] Login/Register page
-- [ ] Proteção de rotas (admin vs cliente)
-- [ ] GitHub repositório conectado
-- [ ] Vercel deploy configurado
+- [x] Projeto criado no Open Code (Antigravity)
+- [x] Configuração Supabase (autenticação)
+- [x] Estrutura de pastas criada
+- [x] Home page básica (sem login ainda)
+- [x] Login/Register page
+- [x] Proteção de rotas (admin vs cliente)
+- [x] GitHub repositório conectado
+- [x] Vercel deploy configurado
+
+**Status:** ✅ COMPLETO
 
 **Prompt para esta fase:** `PROMPT_FASE1_SETUP`
 
@@ -118,14 +120,16 @@ wallstore/
 ### ⏱️ FASE 2: AUTENTICAÇÃO & SUPABASE (Semana 1-2)
 **Objetivo:** Sistema de login funcional
 
-- [ ] Supabase: Tabela `users` criada
-- [ ] Supabase: RLS policies configuradas
-- [ ] Contexto de autenticação (Context API)
-- [ ] Login/Register com Supabase
-- [ ] Token JWT no localStorage
-- [ ] Logout funcional
-- [ ] Rota protegida /admin
-- [ ] Rota protegida /dashboard (cliente)
+- [x] Supabase: Tabela `users` criada
+- [x] Supabase: RLS policies configuradas
+- [x] Contexto de autenticação (Context API)
+- [x] Login/Register com Supabase
+- [x] Token JWT no localStorage
+- [x] Logout funcional
+- [x] Rota protegida /admin
+- [ ] Rota protegida /dashboard (cliente) - Implementado via /my-orders
+
+**Status:** ✅ COMPLETO
 
 **Prompt para esta fase:** `PROMPT_FASE2_AUTH`
 
@@ -134,13 +138,15 @@ wallstore/
 ### ⏱️ FASE 3: PAINEL ADMIN - BASE (Semana 2)
 **Objetivo:** Estrutura do painel admin
 
-- [ ] Layout admin dashboard
-- [ ] Menu lateral (Admin)
-- [ ] Seção "Wallpapers"
-- [ ] Seção "Chat IA"
-- [ ] Seção "Imagens Geradas"
-- [ ] Seção "Vendas/Clientes"
-- [ ] Prototipo visual
+- [x] Layout admin dashboard
+- [x] Menu lateral (Admin)
+- [x] Seção "Wallpapers"
+- [x] Seção "Chat IA" (placeholder)
+- [x] Seção "Imagens Geradas" (placeholder)
+- [x] Seção "Vendas/Clientes"
+- [x] Prototipo visual
+
+**Status:** ✅ COMPLETO
 
 **Prompt para esta fase:** `PROMPT_FASE3_ADMIN_BASE`
 
@@ -149,14 +155,16 @@ wallstore/
 ### ⏱️ FASE 4: WALLPAPER CRUD (Semana 2-3)
 **Objetivo:** Gerenciar wallpapers no admin
 
-- [ ] Tabela `wallpapers` no Supabase
-- [ ] Formulário criar wallpaper
-- [ ] Listar wallpapers (tabela)
-- [ ] Editar wallpaper
-- [ ] Deletar wallpaper
-- [ ] Upload de imagem (Supabase Storage)
-- [ ] Categorias (enum: landscapes, abstract, space, etc)
-- [ ] Preço em BRL
+- [x] Tabela `wallpapers` no Supabase
+- [x] Formulário criar wallpaper
+- [x] Listar wallpapers (tabela)
+- [x] Editar wallpaper
+- [x] Deletar wallpaper
+- [x] Upload de imagem (Supabase Storage)
+- [x] Categorias (enum: landscapes, abstract, space, etc)
+- [x] Preço em BRL
+
+**Status:** ✅ COMPLETO
 
 **Prompt para esta fase:** `PROMPT_FASE4_WALLPAPER_CRUD`
 
@@ -174,6 +182,8 @@ wallstore/
 - [ ] Preview de imagem gerada
 - [ ] Salvar imagem como wallpaper
 
+**Status:** ⏭️ PULAR (sem APIs disponíveis)
+
 **Prompt para esta fase:** `PROMPT_FASE5_IA_INTEGRATION`
 
 ---
@@ -181,14 +191,16 @@ wallstore/
 ### ⏱️ FASE 6: GALERIA DE CLIENTES (Semana 3-4)
 **Objetivo:** Front-end de compra
 
-- [ ] Galeria com grid de wallpapers
-- [ ] Filtro por categoria
-- [ ] Card com: imagem, nome, preço
-- [ ] Botão "Comprar agora"
-- [ ] Modal/página de detalhes
-- [ ] Carrinho (Context API)
-- [ ] Visualizar carrinho
-- [ ] Checkout (preço total)
+- [x] Galeria com grid de wallpapers
+- [x] Filtro por categoria
+- [x] Card com: imagem, nome, preço
+- [x] Botão "Adicionar ao Carrinho"
+- [x] Modal/página de detalhes
+- [x] Carrinho (Context API)
+- [x] Visualizar carrinho (popup)
+- [x] Checkout (preço total)
+
+**Status:** ✅ COMPLETO
 
 **Prompt para esta fase:** `PROMPT_FASE6_CLIENT_GALLERY`
 
@@ -197,13 +209,15 @@ wallstore/
 ### ⏱️ FASE 7: PAGAMENTO PIX (Semana 4)
 **Objetivo:** Fluxo de pagamento
 
-- [ ] Integração PIX (API ou manual)
-- [ ] Gerar QR code PIX
-- [ ] Tela de confirmação
-- [ ] Marcar pedido como "pago"
-- [ ] Registro de pedidos (tabela `orders`)
-- [ ] Histórico de compras (cliente)
-- [ ] Relatório de vendas (admin)
+- [x] Chave PIX configurada (41999220456)
+- [x] Tela de checkout com PIX
+- [x] Registro de pedidos (tabela `orders`)
+- [x] Marcar pedido como "pago" (admin)
+- [x] Histórico de compras (cliente)
+- [x] Relatório de vendas (admin)
+- [ ] QR Code PIX (futuro)
+
+**Status:** ✅ COMPLETO (PIX manual)
 
 **Prompt para esta fase:** `PROMPT_FASE7_PIX_PAYMENT`
 

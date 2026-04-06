@@ -12,7 +12,7 @@ function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCart()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const [pixKey] = useState('sua-chave-pix-aqui')
+  const [pixKey] = useState('41999220456')
 
   const total = getTotalPrice()
 
