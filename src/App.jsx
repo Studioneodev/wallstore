@@ -10,6 +10,7 @@ import DashboardPage from './pages/admin/DashboardPage'
 import EmpresasPage from './pages/admin/EmpresasPage'
 import ContatosPage from './pages/admin/ContatosPage'
 import TarefasPage from './pages/admin/TarefasPage'
+import CalendarioPage from './pages/admin/CalendarioPage'
 import FinanceiroPage from './pages/admin/FinanceiroPage'
 import PetmaxIAPage from './pages/admin/PetmaxIAPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -35,6 +36,7 @@ function App() {
             <Route path="empresas" element={<EmpresasPage />} />
             <Route path="contatos" element={<ContatosPage />} />
             <Route path="tarefas" element={<TarefasPage />} />
+            <Route path="calendario" element={<CalendarioPage />} />
             <Route path="financeiro" element={<FinanceiroPage />} />
             <Route path="petmax-ia" element={<PetmaxIAPage />} />
           </Route>
