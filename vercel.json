@@ -4,7 +4,11 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "framework": "vite"
+        "framework": "vite",
+        "env": {
+          "VITE_SUPABASE_URL": "https://aiiwxykaewarbpltdxdl.supabase.co",
+          "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpaXd4eWthZXdhcmJwbHRkeGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjcyMjQsImV4cCI6MjA5MDg0MzIyNH0.RZ2OOrDYziKR2uBiW13EShVkxxAnDVXcBdycHRjKIWA"
+        }
       }
     }
   ],
