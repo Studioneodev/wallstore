@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import HomePage from './pages/HomePage'
+import WelcomePage from './pages/WelcomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import GalleryPage from './pages/GalleryPage'
@@ -22,6 +23,7 @@ function App() {
       <CartProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/welcome" element={<WelcomePage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -31,7 +33,7 @@ function App() {
             <Route 
               path="/admin" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireAdmin={true}>
                   <AdminLayout />
                 </ProtectedRoute>
               }
