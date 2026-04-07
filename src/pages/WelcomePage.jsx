@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-function WelcomePage() {
-  const navigate = useNavigate()
+export default function WelcomePage() {
   const [showFlash, setShowFlash] = useState(false)
   const [bubbles, setBubbles] = useState([])
 
@@ -21,7 +20,7 @@ function WelcomePage() {
   const handleClick = () => {
     setShowFlash(true)
     setTimeout(() => {
-      navigate('/login')
+      window.location.href = '/login'
     }, 800)
   }
 
@@ -30,7 +29,7 @@ function WelcomePage() {
       onClick={handleClick}
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f3d5c 0%, #1a5f8a 50%, #0d2b42 100%)',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         position: 'relative',
         overflow: 'hidden',
         cursor: 'pointer',
@@ -60,15 +59,9 @@ function WelcomePage() {
 
       <style>{`
         @keyframes floatUp {
-          0% {
-            transform: translateY(0) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-50vh) rotate(180deg);
-          }
-          100% {
-            transform: translateY(-100vh) rotate(360deg);
-          }
+          0% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-50vh) rotate(180deg); }
+          100% { transform: translateY(-100vh) rotate(360deg); }
         }
       `}</style>
 
@@ -77,22 +70,46 @@ function WelcomePage() {
         zIndex: 10,
         position: 'relative'
       }}>
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ 
+            width: '100px', 
+            height: '100px', 
+            backgroundColor: 'white', 
+            borderRadius: '24px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            margin: '0 auto',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
+          }}>
+            <svg style={{ width: '50px', height: '50px', color: '#6366f1' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+        </div>
+        
         <h1 
-          className="welcome-text"
           style={{
             fontSize: 'clamp(2rem, 8vw, 4rem)',
             color: 'white',
             fontWeight: 'bold',
-            textShadow: '0 0 30px rgba(100,180,255,0.5), 0 0 60px rgba(100,180,255,0.3)',
-            letterSpacing: '0.1em',
-            transition: 'all 0.3s ease'
+            textShadow: '0 0 30px rgba(255,255,255,0.3)',
+            letterSpacing: '0.05em',
+            marginBottom: '16px'
           }}
         >
-          Seja bem-vindo
+          Petmax
         </h1>
         <p style={{
-          color: 'rgba(255,255,255,0.7)',
-          marginTop: '20px',
+          color: 'rgba(255,255,255,0.8)',
+          marginBottom: '8px',
+          fontSize: '1.25rem'
+        }}>
+          ERP + CRM + IA
+        </p>
+        <p style={{
+          color: 'rgba(255,255,255,0.6)',
+          marginTop: '40px',
           fontSize: '1rem',
           animation: 'pulse 2s ease-in-out infinite'
         }}>
@@ -107,7 +124,7 @@ function WelcomePage() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(100,180,255,0.8) 30%, transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(102,126,234,0.8) 30%, transparent 70%)',
           animation: 'flash 0.8s ease-out forwards',
           zIndex: 100
         }}>
@@ -117,7 +134,7 @@ function WelcomePage() {
               100% { opacity: 0; }
             }
             @keyframes pulse {
-              0%, 100% { opacity: 0.7; }
+              0%, 100% { opacity: 0.6; }
               50% { opacity: 1; }
             }
           `}</style>
@@ -126,5 +143,3 @@ function WelcomePage() {
     </div>
   )
 }
-
-export default WelcomePage
