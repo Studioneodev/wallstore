@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Header from '../components/shared/Header'
@@ -6,9 +6,17 @@ import Footer from '../components/shared/Footer'
 import Cart from '../components/client/Cart'
 
 function HomePage() {
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const [cartOpen, setCartOpen] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/welcome')
+    }
+  }, [user, navigate])
+
+  if (!user) return null
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>

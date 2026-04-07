@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import CartIcon from '../client/CartIcon'
 
 function Header({ onOpenCart }) {
-  const { user, signOut } = useAuth()
+  const { user, signOut, isAdmin } = useAuth()
 
   return (
     <header style={{ backgroundColor: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.08)', padding: '16px 0', position: 'sticky', top: 0, zIndex: 100 }}>
@@ -22,7 +22,9 @@ function Header({ onOpenCart }) {
           {user ? (
             <>
               <Link to="/my-orders" style={{ color: '#374151', fontWeight: '500' }}>Meus Pedidos</Link>
-              <Link to="/admin" style={{ color: '#6366f1', fontWeight: '500' }}>Admin</Link>
+              {isAdmin && (
+                <Link to="/admin" style={{ color: '#6366f1', fontWeight: '500' }}>Admin</Link>
+              )}
               <button 
                 onClick={signOut}
                 style={{ background: 'none', border: 'none', color: '#374151', fontWeight: '500', cursor: 'pointer' }}

@@ -10,7 +10,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  const { signIn } = useAuth()
+  const { signIn, isAdmin } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -19,7 +19,11 @@ function LoginPage() {
     
     try {
       await signIn(email, password)
-      navigate('/admin')
+      if (isAdmin) {
+        navigate('/admin')
+      } else {
+        navigate('/gallery')
+      }
     } catch (err) {
       setError(err.message || 'Erro ao fazer login')
     } finally {
