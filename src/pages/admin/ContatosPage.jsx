@@ -55,7 +55,11 @@ export default function ContatosPage() {
   async function handleSubmit(e) {
     e.preventDefault()
     try {
-      const data = { ...form, value: form.value ? parseFloat(form.value) : null }
+      const data = { 
+        ...form, 
+        value: form.value ? parseFloat(form.value) : null,
+        company_id: form.company_id || null
+      }
       if (editingId) {
         await contactService.update(editingId, data)
       } else {
@@ -66,7 +70,8 @@ export default function ContatosPage() {
       setForm({ name: '', email: '', phone: '', company_id: '', position: '', source: '', status: 'lead', pipeline_stage: 'novo', value: '', notes: '' })
       loadData()
     } catch (error) {
-      alert('Erro ao salvar contato')
+      console.error('Erro ao salvar contato:', error)
+      alert('Erro ao salvar contato: ' + error.message)
     }
   }
 
