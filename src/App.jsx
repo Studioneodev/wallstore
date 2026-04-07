@@ -13,6 +13,8 @@ import WallpapersPage from './pages/admin/WallpapersPage'
 import ChatIAPage from './pages/admin/ChatIAPage'
 import GerarImagensPage from './pages/admin/GerarImagensPage'
 import VendasPage from './pages/admin/VendasPage'
+import ClientesPage from './pages/admin/ClientesPage'
+import FinanceiroPage from './pages/admin/FinanceiroPage'
 import NotFoundPage from './pages/NotFoundPage'
 import CheckoutPage from './pages/CheckoutPage'
 import MyOrdersPage from './pages/MyOrdersPage'
@@ -43,6 +45,8 @@ function App() {
               <Route path="chat-ia" element={<ChatIAPage />} />
               <Route path="gerar-imagens" element={<GerarImagensPage />} />
               <Route path="vendas" element={<VendasPage />} />
+              <Route path="clientes" element={<ClientesPage />} />
+              <Route path="financeiro" element={<FinanceiroPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
