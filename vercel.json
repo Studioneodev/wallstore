@@ -9,8 +9,8 @@
     }
   ],
   "env": {
-    "VITE_SUPABASE_URL": "https://aiiwxykaewarbpltdxdl.supabase.co",
-    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpaXd4eWthZXdhcmJwbHRkeGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjcyMjQsImV4cCI6MjA5MDg0MzIyNH0.RZ2OOrDYziKR2uBiW13EShVkxxAnDVXcBdycHRjKIWA"
+    "VITE_SUPABASE_URL": "@vercel_env_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY": "@vercel_env_SUPABASE_ANON_KEY"
   },
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
