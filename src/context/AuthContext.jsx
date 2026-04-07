@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
         }
       } catch (err) {
         console.error('Erro ao iniciar auth:', err)
+        setIsAdmin(false)
       } finally {
         setLoading(false)
       }
@@ -39,14 +40,20 @@ export function AuthProvider({ children }) {
 
   async function checkAdmin(userId) {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('users')
         .select('is_admin')
         .eq('id', userId)
         .single()
-      setIsAdmin(data?.is_admin || false)
+      
+      if (error) {
+        console.log('Tabela users não existe ou erro:', error.message)
+        setIsAdmin(false)
+      } else {
+        setIsAdmin(data?.is_admin || false)
+      }
     } catch (err) {
-      console.error('Erro ao verificar admin:', err)
+      console.log('Erro ao verificar admin, definindo como false')
       setIsAdmin(false)
     }
   }

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { companyService } from '../../services/companyService'
+import { supabase } from '../../services/supabaseClient'
 
 export default function EmpresasPage() {
   const [empresas, setEmpresas] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState({
@@ -23,10 +24,17 @@ export default function EmpresasPage() {
 
   async function loadEmpresas() {
     try {
-      const data = await companyService.getAll()
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*')
+        .order('created_at', { ascending: false })
+      
+      if (error) throw error
       setEmpresas(data || [])
-    } catch (error) {
-      console.error('Erro ao carregar empresas:', error)
+      setError(null)
+    } catch (err) {
+      console.error('Erro ao carregar empresas:', err.message)
+      setError('Tabela companies não existe. Configure no Supabase.')
       setEmpresas([])
     } finally {
       setLoading(false)
@@ -37,26 +45,34 @@ export default function EmpresasPage() {
     e.preventDefault()
     try {
       if (editingId) {
-        await companyService.update(editingId, form)
+        const { error } = await supabase
+          .from('companies')
+          .update({ ...form, updated_at: new Date() })
+          .eq('id', editingId)
+        if (error) throw error
       } else {
-        await companyService.create(form)
+        const { error } = await supabase
+          .from('companies')
+          .insert([form])
+        if (error) throw error
       }
       setShowForm(false)
       setEditingId(null)
       setForm({ name: '', trade_name: '', cnpj: '', email: '', phone: '', address: '', city: '', state: '' })
       loadEmpresas()
-    } catch (error) {
-      alert('Erro ao salvar empresa')
+    } catch (err) {
+      alert('Erro ao salvar: ' + err.message)
     }
   }
 
   async function handleDelete(id) {
     if (confirm('Tem certeza que deseja deletar esta empresa?')) {
       try {
-        await companyService.delete(id)
+        const { error } = await supabase.from('companies').delete().eq('id', id)
+        if (error) throw error
         loadEmpresas()
-      } catch (error) {
-        alert('Erro ao deletar empresa')
+      } catch (err) {
+        alert('Erro ao deletar: ' + err.message)
       }
     }
   }
@@ -67,7 +83,16 @@ export default function EmpresasPage() {
     setShowForm(true)
   }
 
-  if (loading) return <div>Carregando...</div>
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '40px', height: '40px', border: '3px solid #e5e7eb', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto' }}></div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -80,6 +105,12 @@ export default function EmpresasPage() {
           {showForm ? 'Cancelar' : '+ Nova Empresa'}
         </button>
       </div>
+
+      {error && (
+        <div style={{ backgroundColor: '#fee2e2', color: '#991b1b', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
+          {error}
+        </div>
+      )}
 
       {showForm && (
         <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
@@ -102,7 +133,9 @@ export default function EmpresasPage() {
 
       <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
         {empresas.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#6b7280' }}>Nenhuma empresa cadastrada</p>
+          <p style={{ textAlign: 'center', color: '#6b7280', padding: '40px' }}>
+            {error ? 'Configure as tabelas no Supabase' : 'Nenhuma empresa cadastrada'}
+          </p>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
