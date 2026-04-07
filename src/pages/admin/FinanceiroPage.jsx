@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
 import { financeiroService } from '../../services/financeiroService'
+import { companyService } from '../../services/companyService'
 
 export default function FinanceiroPage() {
   const [resumo, setResumo] = useState({ totalReceitas: 0, totalDespesas: 0, saldo: 0, receitasPendentes: 0, despesasPendentes: 0 })
   const [receitas, setReceitas] = useState([])
   const [despesas, setDespesas] = useState([])
+  const [empresas, setEmpresas] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('resumo')
   const [showForm, setShowForm] = useState(false)
   const [formType, setFormType] = useState('receita')
-  const [form, setForm] = useState({ description: '', amount: '', category: '', date: new Date().toISOString().split('T')[0], source: '', supplier: '', notes: '' })
+  const [form, setForm] = useState({ description: '', amount: '', category: '', date: new Date().toISOString().split('T')[0], source: '', supplier: '', notes: '', company_id: '' })
 
   useEffect(() => {
     loadData()
@@ -17,14 +19,16 @@ export default function FinanceiroPage() {
 
   async function loadData() {
     try {
-      const [resumoData, receitasData, despesasData] = await Promise.all([
+      const [resumoData, receitasData, despesasData, empresasData] = await Promise.all([
         financeiroService.getResumo().catch(() => ({ totalReceitas: 0, totalDespesas: 0, saldo: 0, receitasPendentes: 0, despesasPendentes: 0 })),
         financeiroService.getReceitas().catch(() => []),
-        financeiroService.getDespesas().catch(() => [])
+        financeiroService.getDespesas().catch(() => []),
+        companyService.getAll().catch(() => [])
       ])
       setResumo(resumoData)
       setReceitas(receitasData || [])
       setDespesas(despesasData || [])
+      setEmpresas(empresasData || [])
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
     } finally {
@@ -35,14 +39,21 @@ export default function FinanceiroPage() {
   async function handleSubmit(e) {
     e.preventDefault()
     try {
-      const data = { ...form, amount: parseFloat(form.amount), received: true, paid: true }
+      const data = { 
+        ...form, 
+        amount: parseFloat(form.amount), 
+        received: true, 
+        paid: true,
+        source: formType === 'receita' ? form.source : null,
+        supplier: formType === 'despesa' ? form.supplier : null
+      }
       if (formType === 'receita') {
         await financeiroService.createReceita(data)
       } else {
         await financeiroService.createDespesa(data)
       }
       setShowForm(false)
-      setForm({ description: '', amount: '', category: '', date: new Date().toISOString().split('T')[0], source: '', supplier: '', notes: '' })
+      setForm({ description: '', amount: '', category: '', date: new Date().toISOString().split('T')[0], source: '', supplier: '', notes: '', company_id: '' })
       loadData()
     } catch (error) {
       alert('Erro ao salvar')
@@ -62,6 +73,11 @@ export default function FinanceiroPage() {
         alert('Erro ao deletar')
       }
     }
+  }
+
+  function getCompanyName(companyId) {
+    const empresa = empresas.find(e => e.id === companyId)
+    return empresa ? empresa.name : null
   }
 
   const formatCurrency = (value) => {
@@ -86,8 +102,8 @@ export default function FinanceiroPage() {
             <button onClick={() => setFormType('despesa')} style={{ padding: '8px 16px', backgroundColor: formType === 'despesa' ? '#ef4444' : '#e5e7eb', color: formType === 'despesa' ? 'white' : '#374151', border: 'none', borderRadius: '6px' }}>Despesa</button>
           </div>
           <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <input type="text" placeholder="Descrição" value={form.description} onChange={e => setForm({...form, description: e.target.value})} required style={{ gridColumn: 'span 2', padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
-            <input type="number" placeholder="Valor" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="text" placeholder="Descrição *" value={form.description} onChange={e => setForm({...form, description: e.target.value})} required style={{ gridColumn: 'span 2', padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="number" placeholder="Valor *" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="date" value={form.date} onChange={e => setForm({...form, date: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }}>
               <option value="">Selecione a categoria</option>
@@ -110,7 +126,17 @@ export default function FinanceiroPage() {
                 </>
               )}
             </select>
-            <input type="text" placeholder={formType === 'receita' ? 'Origem' : 'Fornecedor'} value={formType === 'receita' ? form.source : form.supplier} onChange={e => setForm(formType === 'receita' ? {...form, source: e.target.value} : {...form, supplier: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            {formType === 'receita' ? (
+              <input type="text" placeholder="Origem" value={form.source} onChange={e => setForm({...form, source: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            ) : (
+              <input type="text" placeholder="Fornecedor" value={form.supplier} onChange={e => setForm({...form, supplier: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            )}
+            <select value={form.company_id} onChange={e => setForm({...form, company_id: e.target.value})} style={{ gridColumn: 'span 2', padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }}>
+              <option value="">Selecione a Empresa (opcional)</option>
+              {empresas.map(empresa => (
+                <option key={empresa.id} value={empresa.id}>{empresa.name}</option>
+              ))}
+            </select>
             <button type="submit" style={{ gridColumn: 'span 2', backgroundColor: formType === 'receita' ? '#10b981' : '#ef4444', color: 'white', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: '600' }}>
               Salvar {formType === 'receita' ? 'Receita' : 'Despesa'}
             </button>

@@ -1,4 +1,9 @@
 import { useState, useEffect } from 'react'
+import { supabase } from '../services/supabaseClient'
+import { companyService } from '../services/companyService'
+import { contactService } from '../services/contactService'
+import { taskService } from '../services/taskService'
+import { financeiroService } from '../services/financeiroService'
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
@@ -11,7 +16,6 @@ export default function DashboardPage() {
     saldo: 0
   })
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     loadStats()
@@ -19,32 +23,26 @@ export default function DashboardPage() {
 
   async function loadStats() {
     try {
-      const supabase = window.supabase || (await import('../services/supabaseClient')).supabase
-      
-      const [empresas, contatos, tarefas, receitas, despesas] = await Promise.all([
-        supabase.from('companies').select('*', { count: 'exact', head: true }).catch(() => ({ count: 0 })),
-        supabase.from('contacts').select('*', { count: 'exact', head: true }).catch(() => ({ count: 0 })),
-        supabase.from('tasks').select('*', { count: 'exact', head: true }).catch(() => ({ count: 0 })),
-        supabase.from('receitas').select('amount').catch(() => ({ data: [] })),
-        supabase.from('despesas').select('amount').catch(() => ({ data: [] }))
+      const [empresasData, contatosData, tarefasData, resumoData] = await Promise.all([
+        companyService.getAll().catch(() => []),
+        contactService.getAll().catch(() => []),
+        taskService.getAll().catch(() => []),
+        financeiroService.getResumo().catch(() => ({ totalReceitas: 0, totalDespesas: 0, saldo: 0 }))
       ])
 
-      const totalReceitas = receitas.data?.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0) || 0
-      const totalDespesas = despesas.data?.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0) || 0
+      const tarefasConcluidas = tarefasData.filter(t => t.status === 'concluida').length
 
       setStats({
-        empresas: empresas.count || 0,
-        contatos: contatos.count || 0,
-        tarefas: tarefas.count || 0,
-        tarefasConcluidas: 0,
-        receitas: totalReceitas,
-        despesas: totalDespesas,
-        saldo: totalReceitas - totalDespesas
+        empresas: empresasData.length || 0,
+        contatos: contatosData.length || 0,
+        tarefas: tarefasData.length || 0,
+        tarefasConcluidas,
+        receitas: resumoData.totalReceitas || 0,
+        despesas: resumoData.totalDespesas || 0,
+        saldo: resumoData.saldo || 0
       })
-      setError(null)
     } catch (err) {
-      console.log('Erro ao carregar stats (não crítico):', err)
-      setError('Dados não disponíveis')
+      console.log('Erro ao carregar stats:', err)
     } finally {
       setLoading(false)
     }
@@ -83,12 +81,6 @@ export default function DashboardPage() {
       <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '24px', color: '#111827' }}>
         Dashboard Petmax
       </h2>
-
-      {error && (
-        <div style={{ backgroundColor: '#fef3c7', color: '#92400e', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
-          {error} - Configure as tabelas no Supabase para ver os dados.
-        </div>
-      )}
 
       <div style={{ 
         display: 'grid', 

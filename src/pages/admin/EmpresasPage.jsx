@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../../services/supabaseClient'
+import { companyService } from '../../services/companyService'
 
 export default function EmpresasPage() {
   const [empresas, setEmpresas] = useState([])
@@ -9,13 +9,15 @@ export default function EmpresasPage() {
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState({
     name: '',
-    trade_name: '',
     cnpj: '',
     email: '',
     phone: '',
     address: '',
     city: '',
-    state: ''
+    state: '',
+    zip_code: '',
+    segment: '',
+    notes: ''
   })
 
   useEffect(() => {
@@ -24,17 +26,12 @@ export default function EmpresasPage() {
 
   async function loadEmpresas() {
     try {
-      const { data, error } = await supabase
-        .from('companies')
-        .select('*')
-        .order('created_at', { ascending: false })
-      
-      if (error) throw error
+      const data = await companyService.getAll()
       setEmpresas(data || [])
       setError(null)
     } catch (err) {
       console.error('Erro ao carregar empresas:', err.message)
-      setError('Tabela companies não existe. Configure no Supabase.')
+      setError('Erro ao carregar empresas. Verifique o banco de dados.')
       setEmpresas([])
     } finally {
       setLoading(false)
@@ -45,20 +42,13 @@ export default function EmpresasPage() {
     e.preventDefault()
     try {
       if (editingId) {
-        const { error } = await supabase
-          .from('companies')
-          .update({ ...form, updated_at: new Date() })
-          .eq('id', editingId)
-        if (error) throw error
+        await companyService.update(editingId, form)
       } else {
-        const { error } = await supabase
-          .from('companies')
-          .insert([form])
-        if (error) throw error
+        await companyService.create(form)
       }
       setShowForm(false)
       setEditingId(null)
-      setForm({ name: '', trade_name: '', cnpj: '', email: '', phone: '', address: '', city: '', state: '' })
+      setForm({ name: '', cnpj: '', email: '', phone: '', address: '', city: '', state: '', zip_code: '', segment: '', notes: '' })
       loadEmpresas()
     } catch (err) {
       alert('Erro ao salvar: ' + err.message)
@@ -68,12 +58,20 @@ export default function EmpresasPage() {
   async function handleDelete(id) {
     if (confirm('Tem certeza que deseja deletar esta empresa?')) {
       try {
-        const { error } = await supabase.from('companies').delete().eq('id', id)
-        if (error) throw error
+        await companyService.delete(id)
         loadEmpresas()
       } catch (err) {
         alert('Erro ao deletar: ' + err.message)
       }
+    }
+  }
+
+  async function toggleAtivo(id, isActive) {
+    try {
+      await companyService.toggleActive(id, !isActive)
+      loadEmpresas()
+    } catch (err) {
+      alert('Erro ao atualizar status')
     }
   }
 
@@ -99,7 +97,7 @@ export default function EmpresasPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#111827' }}>Empresas</h2>
         <button 
-          onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: '', trade_name: '', cnpj: '', email: '', phone: '', address: '', city: '', state: '' }) }}
+          onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: '', cnpj: '', email: '', phone: '', address: '', city: '', state: '', zip_code: '', segment: '', notes: '' }) }}
           style={{ backgroundColor: '#6366f1', color: 'white', padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}
         >
           {showForm ? 'Cancelar' : '+ Nova Empresa'}
@@ -116,14 +114,16 @@ export default function EmpresasPage() {
         <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <h3 style={{ marginBottom: '16px' }}>{editingId ? 'Editar' : 'Nova'} Empresa</h3>
           <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <input type="text" placeholder="Razão Social" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
-            <input type="text" placeholder="Nome Fantasia" value={form.trade_name} onChange={e => setForm({...form, trade_name: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="text" placeholder="Razão Social *" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="text" placeholder="CNPJ" value={form.cnpj} onChange={e => setForm({...form, cnpj: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="email" placeholder="Email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="text" placeholder="Telefone" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="text" placeholder="Endereço" value={form.address} onChange={e => setForm({...form, address: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="text" placeholder="Cidade" value={form.city} onChange={e => setForm({...form, city: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="text" placeholder="Estado" value={form.state} onChange={e => setForm({...form, state: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
-            <input type="text" placeholder="Endereço" value={form.address} onChange={e => setForm({...form, address: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="text" placeholder="CEP" value={form.zip_code} onChange={e => setForm({...form, zip_code: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="text" placeholder="Segmento" value={form.segment} onChange={e => setForm({...form, segment: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <textarea placeholder="Observações" value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} style={{ gridColumn: 'span 2', padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px', minHeight: '80px' }} />
             <button type="submit" style={{ gridColumn: 'span 2', backgroundColor: '#10b981', color: 'white', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: '600' }}>
               Salvar Empresa
             </button>
@@ -134,7 +134,7 @@ export default function EmpresasPage() {
       <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
         {empresas.length === 0 ? (
           <p style={{ textAlign: 'center', color: '#6b7280', padding: '40px' }}>
-            {error ? 'Configure as tabelas no Supabase' : 'Nenhuma empresa cadastrada'}
+            {error ? 'Erro ao carregar' : 'Nenhuma empresa cadastrada'}
           </p>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -144,6 +144,7 @@ export default function EmpresasPage() {
                 <th style={{ textAlign: 'left', padding: '12px', color: '#6b7280' }}>CNPJ</th>
                 <th style={{ textAlign: 'left', padding: '12px', color: '#6b7280' }}>Email</th>
                 <th style={{ textAlign: 'left', padding: '12px', color: '#6b7280' }}>Cidade</th>
+                <th style={{ textAlign: 'center', padding: '12px', color: '#6b7280' }}>Status</th>
                 <th style={{ textAlign: 'right', padding: '12px', color: '#6b7280' }}>Ações</th>
               </tr>
             </thead>
@@ -154,6 +155,14 @@ export default function EmpresasPage() {
                   <td style={{ padding: '12px' }}>{empresa.cnpj || '-'}</td>
                   <td style={{ padding: '12px' }}>{empresa.email || '-'}</td>
                   <td style={{ padding: '12px' }}>{empresa.city || '-'}</td>
+                  <td style={{ padding: '12px', textAlign: 'center' }}>
+                    <button 
+                      onClick={() => toggleAtivo(empresa.id, empresa.is_active)}
+                      style={{ padding: '4px 12px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: empresa.is_active ? '#d1fae5' : '#fee2e2', color: empresa.is_active ? '#065f46' : '#991b1b', fontSize: '0.75rem' }}
+                    >
+                      {empresa.is_active ? 'Ativo' : 'Inativo'}
+                    </button>
+                  </td>
                   <td style={{ padding: '12px', textAlign: 'right' }}>
                     <button onClick={() => handleEdit(empresa)} style={{ marginRight: '8px', padding: '6px 12px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Editar</button>
                     <button onClick={() => handleDelete(empresa.id)} style={{ padding: '6px 12px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Deletar</button>

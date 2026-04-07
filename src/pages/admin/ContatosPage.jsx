@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
 import { contactService } from '../../services/contactService'
+import { companyService } from '../../services/companyService'
 
 const pipelineStages = [
   { id: 'novo', label: 'Novo', color: '#3b82f6' },
   { id: 'qualificado', label: 'Qualificado', color: '#8b5cf6' },
   { id: 'proposta', label: 'Proposta', color: '#f59e0b' },
+  { id: 'negociacao', label: 'Negociação', color: '#f97316' },
   { id: 'ganho', label: 'Ganho', color: '#10b981' },
   { id: 'perdido', label: 'Perdido', color: '#ef4444' },
 ]
 
 export default function ContatosPage() {
   const [contatos, setContatos] = useState([])
+  const [empresas, setEmpresas] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
@@ -19,8 +22,7 @@ export default function ContatosPage() {
     name: '',
     email: '',
     phone: '',
-    whatsapp: '',
-    company_name: '',
+    company_id: '',
     position: '',
     source: '',
     status: 'lead',
@@ -30,16 +32,21 @@ export default function ContatosPage() {
   })
 
   useEffect(() => {
-    loadContatos()
+    loadData()
   }, [])
 
-  async function loadContatos() {
+  async function loadData() {
     try {
-      const data = await contactService.getAll()
-      setContatos(data || [])
+      const [contatosData, empresasData] = await Promise.all([
+        contactService.getAll(),
+        companyService.getAll()
+      ])
+      setContatos(contatosData || [])
+      setEmpresas(empresasData || [])
     } catch (error) {
-      console.error('Erro ao carregar contatos:', error)
+      console.error('Erro ao carregar dados:', error)
       setContatos([])
+      setEmpresas([])
     } finally {
       setLoading(false)
     }
@@ -56,8 +63,8 @@ export default function ContatosPage() {
       }
       setShowForm(false)
       setEditingId(null)
-      setForm({ name: '', email: '', phone: '', whatsapp: '', company_name: '', position: '', source: '', status: 'lead', pipeline_stage: 'novo', value: '', notes: '' })
-      loadContatos()
+      setForm({ name: '', email: '', phone: '', company_id: '', position: '', source: '', status: 'lead', pipeline_stage: 'novo', value: '', notes: '' })
+      loadData()
     } catch (error) {
       alert('Erro ao salvar contato')
     }
@@ -67,7 +74,7 @@ export default function ContatosPage() {
     if (confirm('Tem certeza que deseja deletar este contato?')) {
       try {
         await contactService.delete(id)
-        loadContatos()
+        loadData()
       } catch (error) {
         alert('Erro ao deletar contato')
       }
@@ -77,7 +84,7 @@ export default function ContatosPage() {
   async function handleMoveStage(id, stage) {
     try {
       await contactService.updatePipelineStage(id, stage)
-      loadContatos()
+      loadData()
     } catch (error) {
       alert('Erro ao mover contato')
     }
@@ -87,6 +94,11 @@ export default function ContatosPage() {
     setForm(contato)
     setEditingId(contato.id)
     setShowForm(true)
+  }
+
+  function getCompanyName(companyId) {
+    const empresa = empresas.find(e => e.id === companyId)
+    return empresa ? empresa.name : 'Sem empresa'
   }
 
   if (loading) return <div>Carregando...</div>
@@ -104,7 +116,7 @@ export default function ContatosPage() {
           <button onClick={() => setViewMode(viewMode === 'pipeline' ? 'lista' : 'pipeline')} style={{ padding: '10px 20px', backgroundColor: '#e5e7eb', borderRadius: '8px', border: 'none', cursor: 'pointer' }}>
             {viewMode === 'pipeline' ? 'Ver Lista' : 'Ver Pipeline'}
           </button>
-          <button onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: '', email: '', phone: '', whatsapp: '', company_name: '', position: '', source: '', status: 'lead', pipeline_stage: 'novo', value: '', notes: '' }) }} style={{ backgroundColor: '#6366f1', color: 'white', padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}>
+          <button onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({ name: '', email: '', phone: '', company_id: '', position: '', source: '', status: 'lead', pipeline_stage: 'novo', value: '', notes: '' }) }} style={{ backgroundColor: '#6366f1', color: 'white', padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}>
             {showForm ? 'Cancelar' : '+ Novo Contato'}
           </button>
         </div>
@@ -114,11 +126,15 @@ export default function ContatosPage() {
         <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <h3 style={{ marginBottom: '16px' }}>{editingId ? 'Editar' : 'Novo'} Contato</h3>
           <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <input type="text" placeholder="Nome" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <input type="text" placeholder="Nome *" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="email" placeholder="Email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="text" placeholder="Telefone" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
-            <input type="text" placeholder="WhatsApp" value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
-            <input type="text" placeholder="Empresa" value={form.company_name} onChange={e => setForm({...form, company_name: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
+            <select value={form.company_id} onChange={e => setForm({...form, company_id: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }}>
+              <option value="">Selecione a Empresa</option>
+              {empresas.map(empresa => (
+                <option key={empresa.id} value={empresa.id}>{empresa.name}</option>
+              ))}
+            </select>
             <input type="text" placeholder="Cargo" value={form.position} onChange={e => setForm({...form, position: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="text" placeholder="Origem" value={form.source} onChange={e => setForm({...form, source: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
             <input type="number" placeholder="Valor (R$)" value={form.value} onChange={e => setForm({...form, value: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }} />
@@ -127,7 +143,7 @@ export default function ContatosPage() {
               <option value="cliente">Cliente</option>
               <option value="inativo">Inativo</option>
             </select>
-            <select value={form.pipeline_stage} onChange={e => setForm({...form, pipeline_stage: e.target.value})} style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }}>
+            <select value={form.pipeline_stage} onChange={e => setForm({...form, pipeline_stage: e.target.value})} style={{ gridColumn: 'span 2', padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px' }}>
               {pipelineStages.map(stage => <option key={stage.id} value={stage.id}>{stage.label}</option>)}
             </select>
             <textarea placeholder="Notas" value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} style={{ gridColumn: 'span 2', padding: '10px', border: '1px solid #d1d5db', borderRadius: '8px', minHeight: '80px' }} />
@@ -139,7 +155,7 @@ export default function ContatosPage() {
       )}
 
       {viewMode === 'pipeline' ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', overflowX: 'auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '16px', overflowX: 'auto' }}>
           {pipelineStages.map(stage => (
             <div key={stage.id} style={{ backgroundColor: 'white', borderRadius: '12px', padding: '16px', minHeight: '400px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '12px', borderBottom: `3px solid ${stage.color}` }}>
@@ -149,7 +165,7 @@ export default function ContatosPage() {
               {groupedContacts[stage.id]?.map(contato => (
                 <div key={contato.id} style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px', marginBottom: '8px' }}>
                   <p style={{ fontWeight: '500', marginBottom: '4px' }}>{contato.name}</p>
-                  <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '4px' }}>{contato.company_name || 'Sem empresa'}</p>
+                  <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '4px' }}>{getCompanyName(contato.company_id)}</p>
                   {contato.value && <p style={{ fontSize: '0.875rem', color: '#10b981', fontWeight: '600' }}>R$ {contato.value}</p>}
                   <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
                     {stage.id !== 'ganho' && stage.id !== 'perdido' && (
@@ -180,7 +196,7 @@ export default function ContatosPage() {
               {contatos.map(contato => (
                 <tr key={contato.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
                   <td style={{ padding: '12px' }}>{contato.name}</td>
-                  <td style={{ padding: '12px' }}>{contato.company_name || '-'}</td>
+                  <td style={{ padding: '12px' }}>{getCompanyName(contato.company_id)}</td>
                   <td style={{ padding: '12px' }}>{contato.email || '-'}</td>
                   <td style={{ padding: '12px' }}>{contato.phone || '-'}</td>
                   <td style={{ padding: '12px' }}>
