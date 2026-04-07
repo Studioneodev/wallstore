@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { supabase } from '../services/supabaseClient'
 
 function RegisterPage() {
   const [name, setName] = useState('')
@@ -10,7 +11,7 @@ function RegisterPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
-  const { signUp } = useAuth()
+  const { signIn } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,8 +19,40 @@ function RegisterPage() {
     setError('')
     
     try {
-      await signUp(email, password, name)
-      setSuccess(true)
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name },
+          emailRedirectTo: window.location.origin
+        }
+      })
+      
+      if (signUpError) {
+        if (signUpError.message.includes('User already registered')) {
+          setError('Este email já está cadastrado. Faça login ou recupere sua senha.')
+        } else {
+          setError(signUpError.message)
+        }
+        setLoading(false)
+        return
+      }
+
+      if (data.user) {
+        await supabase.from('users').insert([{
+          id: data.user.id,
+          email: email,
+          name: name,
+          is_admin: false
+        }])
+        
+        const { error: signInError } = await signIn(email, password)
+        if (signInError) {
+          setSuccess(true)
+        } else {
+          navigate('/admin')
+        }
+      }
     } catch (err) {
       setError(err.message || 'Erro ao criar conta')
     } finally {
@@ -62,18 +95,23 @@ function RegisterPage() {
           </div>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '12px', color: '#1f2937' }}>Conta criada!</h2>
           <p style={{ color: '#6b7280', marginBottom: '24px' }}>
-            Verifique seu email para confirmar o cadastro.
+            Sua conta foi criada com sucesso. Você já pode usar o sistema.
           </p>
-          <Link to="/login" style={{ 
-            display: 'inline-block',
-            padding: '12px 24px', 
-            backgroundColor: '#6366f1', 
-            color: 'white', 
-            borderRadius: '8px',
-            fontWeight: '600'
-          }}>
-            Ir para Login
-          </Link>
+          <button 
+            onClick={() => navigate('/admin')}
+            style={{ 
+              display: 'inline-block',
+              padding: '12px 24px', 
+              backgroundColor: '#6366f1', 
+              color: 'white', 
+              borderRadius: '8px',
+              fontWeight: '600',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            Ir para Dashboard
+          </button>
         </div>
       </div>
     )
