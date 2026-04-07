@@ -17,16 +17,26 @@ function LoginPage() {
     setError('')
     
     try {
-      const { data } = await signIn(email, password)
+      const { data, error: signInError } = await signIn(email, password)
+      
+      if (signInError) {
+        setError(signInError.message)
+        setLoading(false)
+        return
+      }
       
       if (data?.user) {
-        const { data: userData } = await supabase
-          .from('users')
-          .select('is_admin')
-          .eq('id', data.user.id)
-          .single()
-        
-        navigate(userData?.is_admin ? '/admin' : '/')
+        try {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('is_admin')
+            .eq('id', data.user.id)
+            .single()
+          
+          navigate(userData?.is_admin ? '/admin' : '/')
+        } catch (err) {
+          navigate('/admin')
+        }
       } else {
         navigate('/')
       }
@@ -40,7 +50,7 @@ function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f3d5c 0%, #1a5f8a 50%, #0d2b42 100%)',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -54,7 +64,24 @@ function LoginPage() {
         width: '100%', 
         maxWidth: '400px' 
       }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '24px', textAlign: 'center', color: '#1f2937' }}>Login</h1>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{ 
+            width: '60px', 
+            height: '60px', 
+            backgroundColor: '#6366f1', 
+            borderRadius: '16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            margin: '0 auto 16px'
+          }}>
+            <svg style={{ width: '30px', height: '30px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h1 style={{ fontSize: '1.5rem', color: '#1f2937' }}>Petmax</h1>
+          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>ERP + CRM + IA</p>
+        </div>
         
         {error && (
           <div style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
@@ -85,7 +112,17 @@ function LoginPage() {
             />
           </div>
           
-          <button type="submit" className="btn btn-primary" disabled={loading} style={{ marginTop: '8px', padding: '14px' }}>
+          <button type="submit" disabled={loading} style={{ 
+            marginTop: '8px', 
+            padding: '14px', 
+            backgroundColor: '#6366f1', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '8px', 
+            fontWeight: '600',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.7 : 1
+          }}>
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>

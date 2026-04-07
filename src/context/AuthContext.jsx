@@ -9,13 +9,21 @@ export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null)
-      if (session?.user) {
-        checkAdmin(session.user.id)
+    const initAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        setUser(session?.user || null)
+        if (session?.user) {
+          await checkAdmin(session.user.id)
+        }
+      } catch (err) {
+        console.error('Erro ao iniciar auth:', err)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
-    })
+    }
+
+    initAuth()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null)
@@ -30,12 +38,17 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function checkAdmin(userId) {
-    const { data } = await supabase
-      .from('users')
-      .select('is_admin')
-      .eq('id', userId)
-      .single()
-    setIsAdmin(data?.is_admin || false)
+    try {
+      const { data } = await supabase
+        .from('users')
+        .select('is_admin')
+        .eq('id', userId)
+        .single()
+      setIsAdmin(data?.is_admin || false)
+    } catch (err) {
+      console.error('Erro ao verificar admin:', err)
+      setIsAdmin(false)
+    }
   }
 
   async function signUp(email, password, name) {
@@ -58,6 +71,8 @@ export function AuthProvider({ children }) {
   }
 
   async function signOut() {
+    setUser(null)
+    setIsAdmin(false)
     const { error } = await supabase.auth.signOut()
     if (error) throw error
   }

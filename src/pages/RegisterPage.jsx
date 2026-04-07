@@ -8,6 +8,7 @@ function RegisterPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
   const { signUp } = useAuth()
 
@@ -18,8 +19,7 @@ function RegisterPage() {
     
     try {
       await signUp(email, password, name)
-      alert('Conta criada! Verifique seu email para confirmar.')
-      navigate('/login')
+      setSuccess(true)
     } catch (err) {
       setError(err.message || 'Erro ao criar conta')
     } finally {
@@ -27,10 +27,62 @@ function RegisterPage() {
     }
   }
 
+  if (success) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '40px', 
+          borderRadius: '16px', 
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)', 
+          width: '100%', 
+          maxWidth: '400px',
+          textAlign: 'center'
+        }}>
+          <div style={{ 
+            width: '60px', 
+            height: '60px', 
+            backgroundColor: '#10b981', 
+            borderRadius: '50%', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            margin: '0 auto 16px'
+          }}>
+            <svg style={{ width: '30px', height: '30px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '12px', color: '#1f2937' }}>Conta criada!</h2>
+          <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+            Verifique seu email para confirmar o cadastro.
+          </p>
+          <Link to="/login" style={{ 
+            display: 'inline-block',
+            padding: '12px 24px', 
+            backgroundColor: '#6366f1', 
+            color: 'white', 
+            borderRadius: '8px',
+            fontWeight: '600'
+          }}>
+            Ir para Login
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f3d5c 0%, #1a5f8a 50%, #0d2b42 100%)',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -44,7 +96,24 @@ function RegisterPage() {
         width: '100%', 
         maxWidth: '400px' 
       }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '24px', textAlign: 'center', color: '#1f2937' }}>Cadastre-se</h1>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{ 
+            width: '60px', 
+            height: '60px', 
+            backgroundColor: '#6366f1', 
+            borderRadius: '16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            margin: '0 auto 16px'
+          }}>
+            <svg style={{ width: '30px', height: '30px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h1 style={{ fontSize: '1.5rem', color: '#1f2937' }}>Criar Conta</h1>
+          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>Petmax ERP + CRM + IA</p>
+        </div>
         
         {error && (
           <div style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
@@ -87,8 +156,18 @@ function RegisterPage() {
             />
           </div>
           
-          <button type="submit" className="btn btn-primary" disabled={loading} style={{ marginTop: '8px', padding: '14px' }}>
-            {loading ? 'Criando conta...' : 'Cadastrar'}
+          <button type="submit" disabled={loading} style={{ 
+            marginTop: '8px', 
+            padding: '14px', 
+            backgroundColor: '#6366f1', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '8px', 
+            fontWeight: '600',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.7 : 1
+          }}>
+            {loading ? 'Criando...' : 'Cadastrar'}
           </button>
         </form>
         
