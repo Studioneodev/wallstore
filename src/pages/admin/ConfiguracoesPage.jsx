@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { supabase } from '../../services/supabaseClient'
 
 export default function ConfiguracoesPage() {
   const { user } = useAuth()
+  const [loading, setLoading] = useState(false)
+  const [logoUrl, setLogoUrl] = useState('')
   const [settings, setSettings] = useState({
     companyName: '',
     companyEmail: '',
@@ -12,6 +15,33 @@ export default function ConfiguracoesPage() {
     currency: 'BRL',
     dateFormat: 'DD/MM/YYYY',
   })
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setLoading(true)
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random()}.${fileExt}`
+      const filePath = `logos/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('petmax')
+        .upload(filePath, file)
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage.from('petmax').getPublicUrl(filePath)
+      setLogoUrl(data.publicUrl)
+      alert('Logo uploaded successfully!')
+    } catch (err) {
+      console.error('Error uploading logo:', err)
+      alert('Erro ao fazer upload do logo')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSave = (e) => {
     e.preventDefault()
@@ -25,6 +55,49 @@ export default function ConfiguracoesPage() {
       </h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        
+        {/* Card Upload Logo */}
+        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '20px', color: '#111827' }}>
+            Logo da Empresa
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+            {logoUrl ? (
+              <div style={{ position: 'relative' }}>
+                <img 
+                  src={logoUrl} 
+                  alt="Logo da empresa" 
+                  style={{ width: '150px', height: '150px', objectFit: 'contain', borderRadius: '12px', border: '2px dashed #d1d5db' }}
+                />
+                <button 
+                  onClick={() => setLogoUrl('')}
+                  style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <div style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed #d1d5db', borderRadius: '12px', backgroundColor: '#f9fafb' }}>
+                <span style={{ fontSize: '3rem', color: '#9ca3af' }}>🏢</span>
+              </div>
+            )}
+            <label style={{ cursor: 'pointer', padding: '12px 24px', backgroundColor: '#6366f1', color: 'white', borderRadius: '8px', fontWeight: '500', transition: 'background 0.2s' }}>
+              {loading ? 'Enviando...' : 'Upload Logo'}
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleLogoUpload} 
+                disabled={loading}
+                style={{ display: 'none' }}
+              />
+            </label>
+            <p style={{ fontSize: '0.75rem', color: '#6b7280', textAlign: 'center' }}>
+              PNG, JPG ou GIF. Máximo 2MB.<br/>Tamanho recomendado: 200x200px
+            </p>
+          </div>
+        </div>
+
+        {/* Card Dados da Empresa */}
         <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '20px', color: '#111827' }}>
             Dados da Empresa

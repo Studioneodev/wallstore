@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 function AdminSidebar() {
@@ -74,17 +74,17 @@ function AdminSidebar() {
       zIndex: 10,
     }}>
       <div style={{ padding: '0 20px', marginBottom: '40px', borderBottom: '1px solid #374151', paddingBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <Link to="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '40px', height: '40px', backgroundColor: '#6366f1', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg style={{ width: '24px', height: '24px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
           <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>Petmax</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0, color: 'white' }}>Petmax</h2>
             <p style={{ fontSize: '0.75rem', color: '#9ca3af', margin: 0 }}>ERP + CRM + IA</p>
           </div>
-        </div>
+        </Link>
       </div>
       
       <div style={{ padding: '0 12px' }}>

@@ -33,9 +33,15 @@ function LoginPage() {
             .eq('id', data.user.id)
             .single()
           
-          navigate(userData?.is_admin ? '/admin' : '/')
+          // Se for admin vai pro admin, senão vai pra home do usuário
+          if (userData?.is_admin === true) {
+            navigate('/admin')
+          } else {
+            navigate('/home')
+          }
         } catch (err) {
-          navigate('/admin')
+          // Se der erro na query, vai para home do usuário
+          navigate('/home')
         }
       } else {
         navigate('/')
