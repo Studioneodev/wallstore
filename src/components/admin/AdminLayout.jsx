@@ -145,30 +145,223 @@ function AdminSidebar() {
   )
 }
 
-function AdminHeader() {
+function AdminHeader({ alertCount = 0 }) {
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    setShowUserMenu(false)
+    await logout()
+    navigate('/login')
+  }
+
+  const userMenuItems = [
+    { label: 'Configurações', icon: 'settings', path: '/admin/configuracoes' },
+    { label: 'Log de Atividades', icon: 'history', path: '/admin/logs' },
+    { label: 'Meus Dados', icon: 'user', path: '/admin/perfil' },
+  ]
+
+  const userIcons = {
+    settings: (
+      <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    history: (
+      <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    user: (
+      <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+    ),
+  }
+
   return (
     <header style={{ 
       marginLeft: '260px', 
       backgroundColor: 'white', 
       borderBottom: '1px solid #e5e7eb',
-      padding: '16px 24px',
+      padding: '12px 24px',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+      position: 'sticky',
+      top: 0,
+      zIndex: 5,
     }}>
       <div>
         <h1 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#111827', margin: 0 }}></h1>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ position: 'relative' }}>
+          <button 
+            onClick={() => setShowNotifications(!showNotifications)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#6b7280',
+            }}
+          >
+            <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            {alertCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                backgroundColor: '#ef4444',
+                color: 'white',
+                fontSize: '0.65rem',
+                fontWeight: 'bold',
+                padding: '2px 6px',
+                borderRadius: '10px',
+                minWidth: '18px',
+                textAlign: 'center',
+              }}>
+                {alertCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        <div style={{ position: 'relative' }}>
+          <button 
+            onClick={() => setShowUserMenu(!showUserMenu)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              transition: 'background 0.15s',
+            }}
+          >
+            <div style={{
+              width: '36px',
+              height: '36px',
+              backgroundColor: '#6366f1',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+            }}>
+              {(user?.name || user?.email || 'U')[0].toUpperCase()}
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#111827' }}>
+                {user?.name || 'Usuário'}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                {user?.email || 'Admin'}
+              </div>
+            </div>
+            <svg style={{ width: '16px', height: '16px', color: '#6b7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showUserMenu && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              right: 0,
+              marginTop: '8px',
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.12)',
+              minWidth: '220px',
+              padding: '8px',
+              zIndex: 100,
+            }}>
+              {userMenuItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setShowUserMenu(false)
+                    navigate(item.path)
+                  }}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '12px 16px',
+                    background: 'none',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    color: '#374151',
+                    textAlign: 'left',
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                >
+                  {userIcons[item.icon]}
+                  {item.label}
+                </button>
+              ))}
+              <div style={{ borderTop: '1px solid #e5e7eb', margin: '8px 0' }} />
+              <button
+                onClick={handleLogout}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 16px',
+                  background: 'none',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  color: '#ef4444',
+                  textAlign: 'left',
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#fee2e2'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Sair
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )
 }
 
 function AdminLayout() {
+  const [alertCount] = useState(0)
+  
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <AdminSidebar />
       <div style={{ marginLeft: '260px', flex: 1 }}>
-        <AdminHeader />
+        <AdminHeader alertCount={alertCount} />
         <main style={{ padding: '24px' }}>
           <Outlet />
         </main>
