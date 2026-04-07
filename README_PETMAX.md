@@ -4,7 +4,9 @@
 
 ---
 
-## 📋 INFORMAÇÕES CRÍTICAS
+## ✅ Deploy Automático
+
+O projeto está configurado com CI/CD para deploy automático no Vercel.
 
 ### O que é o Petmax?
 Sistema ERP+CRM completo com IA para gestão empresarial inovadora no mercado.
