@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { supabase } from '../services/supabaseClient'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
@@ -16,8 +17,19 @@ function LoginPage() {
     setError('')
     
     try {
-      await signIn(email, password)
-      navigate('/')
+      const { data } = await signIn(email, password)
+      
+      if (data?.user) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('is_admin')
+          .eq('id', data.user.id)
+          .single()
+        
+        navigate(userData?.is_admin ? '/admin' : '/')
+      } else {
+        navigate('/')
+      }
     } catch (err) {
       setError(err.message || 'Erro ao fazer login')
     } finally {
