@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../services/supabaseClient'
-import { companyService } from '../services/companyService'
-import { contactService } from '../services/contactService'
-import { taskService } from '../services/taskService'
-import { financeiroService } from '../services/financeiroService'
+import { companyService } from '../../services/companyService'
+import { contactService } from '../../services/contactService'
+import { taskService } from '../../services/taskService'
+import { financeiroService } from '../../services/financeiroService'
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
