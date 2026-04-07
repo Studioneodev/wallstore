@@ -1,6 +1,6 @@
 # 🚀 RESUMO FINAL - COMECE AQUI
 
-Olá! Você criou um sistema **COMPLETO** de documentação para não deixar a LLM (eu) perdida.
+Olá! Você criou um sistema **COMPLETO** de documentação para não deixar a LLM (eu) perdida no projeto Petmax.
 
 ---
 
@@ -8,9 +8,9 @@ Olá! Você criou um sistema **COMPLETO** de documentação para não deixar a L
 
 ### 5 Arquivos Principais:
 
-1. **README_WALLPAPER_SITE.md**
+1. **README_PETMAX.md**
    - 📋 Cronograma mestre (8 fases)
-   - 🏗️ Arquitetura do projeto
+   - 🏗️ Arquitetura do projeto ERP+CRM
    - 🔐 Variáveis de ambiente
    - 📊 Endpoints API
 
@@ -40,22 +40,54 @@ Olá! Você criou um sistema **COMPLETO** de documentação para não deixar a L
 
 ---
 
+## 🎯 O QUE É O PETMAX
+
+**ERP+CRM Completo com Inteligência Artificial**
+
+Um sistema robusto e inovador para gestão empresarial que une:
+
+- **ERP** (Enterprise Resource Planning)
+  - Financeiro (receitas, despesas, fluxo de caixa)
+  - Empresas/Organizações
+  - Tarefas e Projetos
+  - Relatórios
+
+- **CRM** (Customer Relationship Management)
+  - Contatos e Clientes
+  - Pipeline de vendas
+  - Histórico de interações
+  - Automação
+
+- **IA Artificial**
+  - Assistente virtual para dúvidas fiscais/financeiras
+  - Análises automatizadas
+  - Relatórios inteligentes
+  - Sugestões baseadas em dados
+
+- **Modelo SaaS**
+  - Multi-empresas
+  - Planos de assinatura
+  - Configurações por empresa
+  - Escalável
+
+---
+
 ## 🎯 COMO COMEÇAR (HOJE)
 
 ### Passo 1: Prepare o GitHub
 ```bash
 # Crie um repositório GitHub novo
-# Nome: wallstore
-# Descrição: "Website de venda de wallpapers com admin IA"
+# Nome: petmax
+# Descrição: "ERP+CRM com IA para gestão empresarial"
 # Clone para sua máquina
-git clone https://github.com/Studioneodev/wallstore.git
-cd wallstore
+git clone https://github.com/Studioneodev/petmax.git
+cd petmax
 ```
 
 ### Passo 2: Configure Vercel
 - Faça login em Vercel
 - Clique "New Project"
-- Selecione o repositório `wallstore` do GitHub (ou use: https://vercel.com/studioneodevs-projects)
+- Selecione o repositório `petmax` do GitHub
 - Deploy automático ativado ✓
 
 ### Passo 3: Configure Supabase
@@ -82,7 +114,7 @@ VITE_NANOBANA_API_KEY=xxxxx
 Copie este texto e envie:
 
 ```
-Olá Claude! Vou começar o projeto do website de wallpapers.
+Olá Claude! Vou começar o projeto Petmax - ERP+CRM com IA.
 
 Estrutura:
 - Repositório GitHub criado: [URL]
@@ -104,7 +136,7 @@ Autorizo para começar FASE 1 agora?
 ## 📚 COMO EU VОСЬ USAR ISSO TUDO
 
 ### Quando receber seu pedido:
-1. **Revisar README_WALLPAPER_SITE.md** → qual fase?
+1. **Revisar README_PETMAX.md** → qual fase?
 2. **Revisar PROMPTS_DEVELOPMENT.md** → qual prompt?
 3. **Revisar CHECKLIST_PRATICO.md** → o que fazer?
 4. **Revisar DEPLOY_E_COMMITS.md** → como fazer deploy?
@@ -142,8 +174,8 @@ Autorizo para começar FASE 1 agora?
 ### Timeline Estimada:
 ```
 SEMANA 1: Fases 1, 2, 3 (Setup, Auth, Admin Base)
-SEMANA 2: Fases 4, 5 (Wallpaper CRUD, IA Integration)
-SEMANA 3: Fases 6, 7 (Galeria, PIX Pagamento)
+SEMANA 2: Fases 4, 5 (Módulos ERP, IA Integration)
+SEMANA 3: Fases 6, 7 (Financeiro, SaaS Multi-empresa)
 SEMANA 4: Fase 8 (Polimento & Deploy)
 ```
 
@@ -201,7 +233,7 @@ VOCÊ                    EU (Claude/LLM)
   ├─► Autoriza Fase 2    ─► Lê README + Prompt Fase 2
   │                      ─► ... (repete processo)
   │
-  └─► ... até Fase 8     ─► ... site completo em Vercel
+  └─► ... até Fase 8     ─► ... sistema completo em Vercel
 ```
 
 ---
@@ -231,8 +263,7 @@ Você criou um **produto profissional de software** com:
 - ✅ Comunicação estruturada (sempre português)
 - ✅ Recovery (se algo der errado, reverter é fácil)
 
-**Isso não é um projeto "fazer e rezar".**
-**Isso é um projeto PROFISSIONAL.**
+**Um ERP+CRM inovador com IA que será referência no mercado!**
 
 ---
 
@@ -257,7 +288,7 @@ E começamos de verdade! 🎉
 ---
 
 **Documento criado em:** Hoje  
-**Versão:** 1.0 Completa  
+**Versão:** 2.0 Completa - Petmax ERP+CRM  
 **Status:** 🟢 Pronto para começar
 
-**Boa sorte! Vamos criar algo incrível juntos! 🚀**
+**Vamos criar o Petmax - um sistema inovador no mercado! 🚀**

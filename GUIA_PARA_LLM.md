@@ -1,4 +1,4 @@
-# 🤖 GUIA PARA A LLM - COMO EU VEJO USAR TUDO ISSO
+# 🎯 GUIA PARA A LLM - COMO EU VEJO USAR TUDO ISSO
 
 **Este arquivo é para EU (Claude) entender como usar toda a documentação**
 
@@ -6,7 +6,7 @@
 
 ## 🎯 MINHA MISSÃO
 
-Você criou estes documentos para que EU não fique perdida desenvolvendo seu site.
+Você criou estes documentos para que EU não fique perdida desenvolvendo seu sistema Petmax.
 
 **Meu objetivo:**
 - ✅ Seguir a documentação à risca
@@ -20,7 +20,7 @@ Você criou estes documentos para que EU não fique perdida desenvolvendo seu si
 
 ## 📚 OS 4 DOCUMENTOS CRIADOS
 
-### 1️⃣ README_WALLPAPER_SITE.md
+### 1️⃣ README_PETMAX.md
 **O que é:** Cronograma mestre + arquitetura do projeto
 
 **Quando uso:**
@@ -36,7 +36,7 @@ Você criou estes documentos para que EU não fique perdida desenvolvendo seu si
 Segundo o README:
 - FASE 3 = Painel Admin - Layout Base
 - Preciso criar: AdminLayout, AdminSidebar, AdminHeader
-- Menu com 5 seções: Dashboard, Wallpapers, Chat IA, Gerar Imagens, Vendas
+- Menu com 6 seções: Dashboard, Empresas, Contatos, Financeiro, Tarefas, IA
 
 Vou começar?"
 ```
@@ -57,7 +57,7 @@ Vou começar?"
 Vou seguir o PROMPT_FASE2_AUTH que diz:
 
 ESCOPO:
-1. Configurar Supabase (tabela users)
+1. Configurar Supabase (tabela users, companies, contacts)
 2. RLS Policies no Supabase
 3. AuthContext com Context API
 ...
@@ -107,12 +107,12 @@ Tudo ok! Posso fazer commit?"
 "Terminei funcionalidade. Antes de fazer commit:
 
 Arquivos modificados:
-- src/components/admin/ChatIA.jsx
-- src/services/minmaxAPI.js
+- src/components/admin/Dashboard.jsx
+- src/services/companyService.js
 
 Alterações:
-- Chat Minimax integrado
-- Histórico funcional
+- Dashboardadmin integrado
+- Dados da empresa funcionais
 
 Posso fazer commit e deploy agora?"
 ```
@@ -123,7 +123,7 @@ Posso fazer commit e deploy agora?"
 
 ### MANHÃ - Começo do dia
 ```
-1. Revisar README_WALLPAPER_SITE.md
+1. Revisar README_PETMAX.md
 2. Confirmar qual fase estou
 3. Ler prompt da fase (PROMPTS_DEVELOPMENT.md)
 4. Abrir checklist correspondente (CHECKLIST_PRATICO.md)
@@ -247,7 +247,7 @@ Posso fazer commit e deploy agora?"
 "✅ FASE X ONLINE!
 
 Deploy: ✅ Sucesso
-Site: https://seu-site.vercel.app
+Site: https://petmax.vercel.app
 Próxima: FASE X+1
 
 Alguma observação?"
@@ -304,28 +304,29 @@ Fase 3: Admin panel base
 ├─ Componentes vazios
 └─ Commit #3
 
-Fase 4: Wallpaper CRUD
-├─ Tabela Supabase
-├─ Upload imagens
-├─ CRUD completo
+Fase 4: Módulos ERP
+├─ Empresas (CRUD)
+├─ Contatos (CRM)
+├─ Tarefas/Projetos
+├─ Dashboard stats
 └─ Commit #4
 
 Fase 5: IA Integration
-├─ Chat Minimax
-├─ Gerador imagens
-├─ Preview
+├─ Chat Petmax IA
+├─ Análises automatizadas
+├─ Relatórios IA
 └─ Commit #5
 
-Fase 6: Galeria cliente
-├─ Grid wallpapers
-├─ Filtros/Pesquisa
-├─ Carrinho
+Fase 6: Financeiro
+├─ Receitas/Despesas
+├─ Fluxo de caixa
+├─ Relatórios financeiros
 └─ Commit #6
 
-Fase 7: PIX Pagamento
-├─ QR Code
-├─ Checkout
-├─ Orders tabela
+Fase 7: Sistema SaaS
+├─ Planos/Assinaturas
+├─ Multi-empresas
+├─ Configurações
 └─ Commit #7
 
 Fase 8: Polimento
@@ -373,19 +374,19 @@ Fase 8: Polimento
 **No final do projeto:**
 
 1. **Todas 8 fases completas** ✅
-2. **Site 100% funcional** ✅
+2. **Sistema 100% funcional** ✅
 3. **Online em Vercel** ✅
 4. **Documentação completa** ✅
-5. **Admin pode gerenciar wallpapers** ✅
-6. **Clientes podem comprar via PIX** ✅
-7. **IA Minimax + Nano Banana integradas** ✅
+5. **Admin pode gerenciar empresas e contatos** ✅
+6. **Módulos financeiros operacionais** ✅
+7. **IA Petmax integrada** ✅
 
 **E eu terei:**
 - ✅ Seguido documentação à risca
 - ✅ Pedido autorização para tudo importante
 - ✅ Nunca improvisado
 - ✅ Mantido você informado
-- ✅ Criado um site de qualidade
+- ✅ Criado um sistema de qualidade
 
 ---
 
@@ -408,4 +409,4 @@ Fase 8: Polimento
 
 ---
 
-**VAMOS CRIAR UM SITE INCRÍVEL! 🚀**
+**VAMOS CRIAR UM ERP+CRM INCRÍVEL! 🚀**

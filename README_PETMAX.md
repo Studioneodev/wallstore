@@ -1,19 +1,27 @@
-# 🎨 WALLPAPER STORE - Guia Completo de Desenvolvimento
+# 🏢 PETMAX - ERP+CRM com Inteligência Artificial
 
-**Status:** Inicial | **Linguagem:** Português | **Owner:** Administrador
+**Status:** Em Desenvolvimento | **Linguagem:** Português | **Owner:** Administrador
 
 ---
 
 ## 📋 INFORMAÇÕES CRÍTICAS
 
+### O que é o Petmax?
+Sistema ERP+CRM completo com IA para gestão empresarial inovadora no mercado.
+
+### Módulos do Sistema
+- **ERP**: Financeiro, Empresas, Tarefas/Projetos, Relatórios
+- **CRM**: Contatos, Clientes, Pipeline de Vendas, Histórico
+- **IA**: Assistente virtual, Análises automatizadas, Relatórios inteligentes
+- **SaaS**: Multi-empresas, Planos de assinatura, Configurações
+
 ### Plataformas & Ferramentas
 - **Frontend/Backend:** Open Code (Antigravity)
-- **LLM:** Minimax
-- **IA para Gerar Imagens:** Nano Banana
+- **LLM:** Minimax (IA para assistências)
+- **IA para Imagens:** Nano Banana
 - **Autenticação:** Supabase
 - **Versionamento:** GitHub
 - **Deploy:** Vercel (automático via commit)
-- **Pagamento:** PIX (manual/integração futura)
 
 ### Restrições de Segurança & Processo
 ✅ **PERMITIDO:**
@@ -38,22 +46,25 @@
 ## 🏗️ ARQUITETURA DO PROJETO
 
 ```
-wallstore/
+petmax/
 ├── public/
 │   ├── images/
 │   └── icons/
 ├── src/
 │   ├── components/
 │   │   ├── admin/
-│   │   │   ├── ChatIA.jsx          # Chat com Minimax
-│   │   │   ├── ImageGenerator.jsx  # Integração Nano Banana
-│   │   │   ├── WallpaperManager.jsx # CRUD wallpapers
-│   │   │   └── Dashboard.jsx       # Painel principal
-│   │   ├── client/
-│   │   │   ├── WallpaperGallery.jsx
-│   │   │   ├── WallpaperCard.jsx
-│   │   │   ├── CartAndCheckout.jsx
-│   │   │   └── CategoryFilter.jsx
+│   │   │   ├── Dashboard.jsx          # Dashboard principal
+│   │   │   ├── CompanyManager.jsx     # CRUD Empresas
+│   │   │   ├── ContactManager.jsx     # CRM Contatos
+│   │   │   ├── TaskManager.jsx         # Tarefas/Projetos
+│   │   │   ├── Financeiro.jsx          # Módulo Financeiro
+│   │   │   ├── Receitas.jsx            # Controle receitas
+│   │   │   ├── Despesas.jsx            # Controle despesas
+│   │   │   ├── PetmaxAI.jsx            # Chat com IA
+│   │   │   ├── AIRelatorios.jsx        # Relatórios IA
+│   │   │   ├── Planos.jsx              # Gestão de planos SaaS
+│   │   │   ├── Settings.jsx            # Configurações
+│   │   │   └── SalesPipeline.jsx        # Pipeline CRM
 │   │   ├── auth/
 │   │   │   ├── LoginForm.jsx
 │   │   │   ├── RegisterForm.jsx
@@ -69,17 +80,21 @@ wallstore/
 │   │   ├── RegisterPage.jsx
 │   │   └── NotFound.jsx
 │   ├── services/
-│   │   ├── supabaseClient.js       # Configuração Supabase
-│   │   ├── minmaxAPI.js            # API Minimax
-│   │   ├── nanobanaAPI.js          # API Nano Banana
-│   │   └── wallpaperService.js     # CRUD operações
+│   │   ├── supabaseClient.js           # Configuração Supabase
+│   │   ├── minmaxAPI.js                # API Minimax
+│   │   ├── nanobanaAPI.js              # API Nano Banana
+│   │   ├── companyService.js           # CRUD Empresas
+│   │   ├── contactService.js           # CRM Contatos
+│   │   ├── taskService.js              # Tarefas
+│   │   └── financeiroService.js       # Financeiro
 │   ├── hooks/
 │   │   ├── useAuth.js
-│   │   ├── useWallpapers.js
-│   │   └── useChat.js
+│   │   ├── useCompanies.js
+│   │   ├── useContacts.js
+│   │   └── useFinanceiro.js
 │   ├── context/
 │   │   ├── AuthContext.jsx
-│   │   └── CartContext.jsx
+│   │   └── AppContext.jsx
 │   ├── styles/
 │   │   ├── global.css
 │   │   └── components/
@@ -113,8 +128,6 @@ wallstore/
 
 **Status:** ✅ COMPLETO
 
-**Prompt para esta fase:** `PROMPT_FASE1_SETUP`
-
 ---
 
 ### ⏱️ FASE 2: AUTENTICAÇÃO & SUPABASE (Semana 1-2)
@@ -127,11 +140,8 @@ wallstore/
 - [x] Token JWT no localStorage
 - [x] Logout funcional
 - [x] Rota protegida /admin
-- [ ] Rota protegida /dashboard (cliente) - Implementado via /my-orders
 
 **Status:** ✅ COMPLETO
-
-**Prompt para esta fase:** `PROMPT_FASE2_AUTH`
 
 ---
 
@@ -140,86 +150,75 @@ wallstore/
 
 - [x] Layout admin dashboard
 - [x] Menu lateral (Admin)
-- [x] Seção "Wallpapers"
-- [x] Seção "Chat IA" (placeholder)
-- [x] Seção "Imagens Geradas" (placeholder)
-- [x] Seção "Vendas/Clientes"
+- [x] Seção "Dashboard"
+- [x] Seção "Empresas"
+- [x] Seção "Contatos (CRM)"
+- [x] Seção "Tarefas"
+- [x] Seção "Financeiro"
+- [x] Seção "Petmax IA"
 - [x] Prototipo visual
 
 **Status:** ✅ COMPLETO
 
-**Prompt para esta fase:** `PROMPT_FASE3_ADMIN_BASE`
+---
+
+### ⏱️ FASE 4: MÓDULOS ERP+CRM (Semana 2-3)
+**Objetivo:** Gerenciar empresas, contatos e tarefas
+
+- [ ] Tabela `companies` no Supabase (Empresas)
+- [ ] Tabela `contacts` no Supabase (CRM)
+- [ ] Tabela `tasks` no Supabase (Tarefas)
+- [ ] CRUD Empresas (create, read, update, delete)
+- [ ] CRUD Contatos (CRM completo)
+- [ ] CRUD Tarefas/Projetos
+- [ ] Dashboard com estatísticas
+- [ ] Pipeline de vendas (CRM)
+
+**Status:** ⏳ Em progresso
 
 ---
 
-### ⏱️ FASE 4: WALLPAPER CRUD (Semana 2-3)
-**Objetivo:** Gerenciar wallpapers no admin
-
-- [x] Tabela `wallpapers` no Supabase
-- [x] Formulário criar wallpaper
-- [x] Listar wallpapers (tabela)
-- [x] Editar wallpaper
-- [x] Deletar wallpaper
-- [x] Upload de imagem (Supabase Storage)
-- [x] Categorias (enum: landscapes, abstract, space, etc)
-- [x] Preço em BRL
-
-**Status:** ✅ COMPLETO
-
-**Prompt para esta fase:** `PROMPT_FASE4_WALLPAPER_CRUD`
-
----
-
-### ⏱️ FASE 5: INTEGRAÇÃO MINIMAX + NANO BANANA (Semana 3)
-**Objetivo:** Chat IA e geração de imagens
+### ⏱️ FASE 5: INTEGRAÇÃO IA (Semana 3)
+**Objetivo:** Chat com IA e análises automatizadas
 
 - [ ] Configurar credenciais Minimax no .env
-- [ ] Componente ChatIA com histórico
+- [ ] Componente PetmaxAI com histórico
 - [ ] Integração Minimax API
-- [ ] Configurar Nano Banana no .env
-- [ ] Integração Nano Banana (gerar imagens)
-- [ ] Botão "Gerar com IA" (admin only)
-- [ ] Preview de imagem gerada
-- [ ] Salvar imagem como wallpaper
+- [ ] Assistente para dúvidas fiscais/financeiras
+- [ ] Análises automatizadas
+- [ ] Relatórios inteligentes
+- [ ] Sugestões baseadas em dados
 
-**Status:** ⏭️ PULAR (sem APIs disponíveis)
-
-**Prompt para esta fase:** `PROMPT_FASE5_IA_INTEGRATION`
+**Status:** ⏳ Pendente
 
 ---
 
-### ⏱️ FASE 6: GALERIA DE CLIENTES (Semana 3-4)
-**Objetivo:** Front-end de compra
+### ⏱️ FASE 6: MÓDULO FINANCEIRO (Semana 3-4)
+**Objetivo:** Controle financeiro completo
 
-- [x] Galeria com grid de wallpapers
-- [x] Filtro por categoria
-- [x] Card com: imagem, nome, preço
-- [x] Botão "Adicionar ao Carrinho"
-- [x] Modal/página de detalhes
-- [x] Carrinho (Context API)
-- [x] Visualizar carrinho (popup)
-- [x] Checkout (preço total)
+- [ ] Tabela `receitas` no Supabase
+- [ ] Tabela `despesas` no Supabase
+- [ ] Registro de receitas
+- [ ] Registro de despesas
+- [ ] Fluxo de caixa
+- [ ] Relatórios financeiros
+- [ ] Gráficos de evolução
 
-**Status:** ✅ COMPLETO
-
-**Prompt para esta fase:** `PROMPT_FASE6_CLIENT_GALLERY`
+**Status:** ⏳ Pendente
 
 ---
 
-### ⏱️ FASE 7: PAGAMENTO PIX (Semana 4)
-**Objetivo:** Fluxo de pagamento
+### ⏱️ FASE 7: SISTEMA SAAS (Semana 4)
+**Objetivo:** Multi-empresas e planos
 
-- [x] Chave PIX configurada (41999220456)
-- [x] Tela de checkout com PIX
-- [x] Registro de pedidos (tabela `orders`)
-- [x] Marcar pedido como "pago" (admin)
-- [x] Histórico de compras (cliente)
-- [x] Relatório de vendas (admin)
-- [ ] QR Code PIX (futuro)
+- [ ] Tabela `plans` (planos de assinatura)
+- [ ] Tabela `subscriptions` (assinaturas)
+- [ ] Gestão de planos (free, basic, pro)
+- [ ] Limites por plano
+- [ ] Configurações por empresa
+- [ ] Multi-tenancy (várias empresas)
 
-**Status:** ✅ COMPLETO (PIX manual)
-
-**Prompt para esta fase:** `PROMPT_FASE7_PIX_PAYMENT`
+**Status:** ⏳ Pendente
 
 ---
 
@@ -233,9 +232,8 @@ wallstore/
 - [ ] GitHub final push
 - [ ] Vercel deploy produção
 - [ ] Monitoramento de erros
-- [ ] Suporte & manutenção
 
-**Prompt para esta fase:** `PROMPT_FASE8_POLISH`
+**Status:** ⏳ Pendente
 
 ---
 
@@ -247,7 +245,7 @@ VITE_SUPABASE_URL=https://xxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=xxxxx
 SUPABASE_SERVICE_KEY=xxxxx
 
-# Minimax
+# Minimax (IA)
 VITE_MINIMAX_API_KEY=xxxxx
 VITE_MINIMAX_MODEL=xxxxx
 
@@ -291,16 +289,27 @@ git push origin main
 - `POST /auth/v1/signup` - Registrar
 - `POST /auth/v1/token?grant_type=password` - Login
 
-### Wallpapers
-- `GET /rest/v1/wallpapers` - Listar todos
-- `GET /rest/v1/wallpapers?category=eq.landscapes` - Filtrar
-- `POST /rest/v1/wallpapers` - Criar (admin)
-- `PATCH /rest/v1/wallpapers?id=eq.xxx` - Atualizar (admin)
-- `DELETE /rest/v1/wallpapers?id=eq.xxx` - Deletar (admin)
+### Empresas
+- `GET /rest/v1/companies` - Listar todas
+- `POST /rest/v1/companies` - Criar
+- `PATCH /rest/v1/companies?id=eq.xxx` - Atualizar
+- `DELETE /rest/v1/companies?id=eq.xxx` - Deletar
 
-### Pedidos
-- `GET /rest/v1/orders?user_id=eq.xxx` - Meus pedidos
-- `POST /rest/v1/orders` - Criar pedido
+### Contatos (CRM)
+- `GET /rest/v1/contacts` - Listar todos
+- `POST /rest/v1/contacts` - Criar
+- `PATCH /rest/v1/contacts?id=eq.xxx` - Atualizar
+- `DELETE /rest/v1/contacts?id=eq.xxx` - Deletar
+
+### Tarefas
+- `GET /rest/v1/tasks` - Listar todas
+- `POST /rest/v1/tasks` - Criar
+- `PATCH /rest/v1/tasks?id=eq.xxx` - Atualizar
+- `DELETE /rest/v1/tasks?id=eq.xxx` - Deletar
+
+### Financeiro
+- `GET /rest/v1/receitas` - Listar receitas
+- `GET /rest/v1/despesas` - Listar despesas
 
 ---
 
@@ -347,6 +356,19 @@ Se algo der errado:
 
 ---
 
-**Versão:** 1.0  
+## 🏆 VISÃO PETMAX
+
+O Petmax será um sistema **robusto e inovador** no mercado de ERP+CRM com IA, oferecendo:
+
+- **Para empresas**: Gestão completa (financeiro, tarefas, projetos)
+- **Para vendas**: CRM moderno com pipeline e histórico
+- **Para consultorias**: IA que ajuda em questões fiscais e financeiras
+- **Para o futuro**: Modelo SaaS escalável com múltiplas empresas
+
+**Um diferencial no mercado brasileiro!**
+
+---
+
+**Versão:** 2.0  
 **Última atualização:** Hoje  
-**Próxima revisão:** Após Fase 1 completa  
+**Próxima revisão:** Após Fase 4 completa

@@ -1,4 +1,4 @@
-# ✅ CHECKLIST PRÁTICO - WALLPAPER STORE
+# ✅ CHECKLIST PRÁTICO - PETMAX ERP+CRM
 
 **Use este arquivo para acompanhar progresso e garantir qualidade**
 
@@ -7,7 +7,7 @@
 ## 🎯 ANTES DE COMEÇAR (TODOS OS DIAS)
 
 ### Checklist de Abertura
-- [ ] Li o README.md completamente?
+- [ ] Li o README_PETMAX.md completamente?
 - [ ] Sei em qual fase estou?
 - [ ] Tenho as credenciais necessárias? (.env)
 - [ ] GitHub está atualizado? (git pull)
@@ -91,6 +91,7 @@
 - [ ] Hash de senha (Supabase)
 - [ ] Nome do usuário
 - [ ] Flag is_admin (false para clientes)
+- [ ] company_id (关联企业)
 - [ ] created_at timestamp
 
 ### Testes Manuais
@@ -118,14 +119,16 @@
 - [ ] `components/admin/AdminLayout.jsx` criado (wrapper)
 - [ ] `components/admin/AdminSidebar.jsx` criado
 - [ ] `components/admin/AdminHeader.jsx` criado
-- [ ] Sidebar com 5 menu items
+- [ ] Sidebar com 6+ menu items
 
 ### Menu Items (vazios, apenas navegação)
 - [ ] 📊 Dashboard
-- [ ] 🖼️ Wallpapers
-- [ ] 💬 Chat IA
-- [ ] 🎨 Gerar Imagens
-- [ ] 💰 Vendas & Clientes
+- [ ] 🏢 Empresas
+- [ ] 👥 Contatos (CRM)
+- [ ] 📋 Tarefas
+- [ ] 💰 Financeiro
+- [ ] 🤖 Petmax IA
+- [ ] ⚙️ Configurações
 
 ### Estilo
 - [ ] Tema profissional (cores, fontes)
@@ -151,83 +154,76 @@
 
 ---
 
-## 📦 FASE 4: WALLPAPER CRUD
+## 🏢 FASE 4: MÓDULOS ERP+CRM
 
 ### Supabase
-- [ ] Tabela `wallpapers` criada com campos
-- [ ] Bucket `wallpapers` criado em Storage
-- [ ] RLS policies para upload/read/edit/delete
-- [ ] Índices criados se necessário
+- [ ] Tabela `companies` criada com campos
+- [ ] Tabela `contacts` criada com campos (CRM)
+- [ ] Tabela `tasks` criada com campos
+- [ ] Tabela `projects` criada com campos
+- [ ] RLS policies para todas as tabelas
 
-### Código
-- [ ] `services/wallpaperService.js` criado
-- [ ] `components/admin/WallpaperManager.jsx`
-- [ ] `components/admin/WallpaperForm.jsx`
-- [ ] `components/admin/WallpaperList.jsx`
-- [ ] Validações de formulário
+### Código Empresas
+- [ ] `services/companyService.js` criado
+- [ ] `components/admin/CompanyManager.jsx`
+- [ ] `components/admin/CompanyForm.jsx`
+- [ ] `components/admin/CompanyList.jsx`
 
-### Funcionalidades - CREATE
-- [ ] Input: title (required)
-- [ ] Input: description (required)
-- [ ] Select: category (dropdown)
-- [ ] Input: price (decimal, BRL)
-- [ ] File upload: imagem (jpg, png)
-- [ ] Botão: Salvar
-- [ ] Validar tipo arquivo (image/*)
-- [ ] Validar tamanho (< 5MB)
-- [ ] Upload para Supabase Storage
-- [ ] Registrar em tabela wallpapers
-- [ ] Mostrar sucesso/erro
+### Código Contatos (CRM)
+- [ ] `services/contactService.js` criado
+- [ ] `components/admin/ContactManager.jsx`
+- [ ] `components/admin/ContactForm.jsx`
+- [ ] `components/admin/ContactList.jsx`
+- [ ] `components/admin/SalesPipeline.jsx`
 
-### Funcionalidades - READ
-- [ ] Listar todos wallpapers do admin
-- [ ] Mostrar em tabela ou cards
-- [ ] Colunas: imagem (thumb), título, categoria, preço, ações
-- [ ] Imagem thumbnail carrega rápido
-- [ ] Ordem: mais recentes primeiro
+### Código Tarefas
+- [ ] `services/taskService.js` criado
+- [ ] `components/admin/TaskManager.jsx`
+- [ ] `components/admin/TaskForm.jsx`
+- [ ] `components/admin/TaskList.jsx`
+- [ ] `components/admin/ProjectManager.jsx`
 
-### Funcionalidades - UPDATE
-- [ ] Clicar editar → preenche formulário
-- [ ] Editar campos
-- [ ] Reuploar imagem (opcional)
-- [ ] Salvar mudanças
-- [ ] Mostrar sucesso
-- [ ] Lista atualiza
+### Funcionalidades - Companies
+- [ ] Criar empresa (nome, CNPJ/CPF, telefone, endereço)
+- [ ] Listar empresas (tabela/cards)
+- [ ] Editar empresa
+- [ ] Deletar empresa (soft delete)
+- [ ] Ativar/Inativar empresa
 
-### Funcionalidades - DELETE
-- [ ] Botão deletar com confirmação
-- [ ] Confirmar: "Tem certeza?"
-- [ ] Deletar da tabela
-- [ ] Limpar storage (imagem)
-- [ ] Lista atualiza
+### Funcionalidades - Contatos (CRM)
+- [ ] Criar contato (nome, email, telefone, empresa)
+- [ ] Listar contatos (filtro por status)
+- [ ] Pipeline de vendas ( Kanban )
+- [ ] Editar contato
+- [ ] Deletar contato
+- [ ] Status: lead, cliente, inativo
+- [ ] Etapas: novo, qualificado, proposta, ganho, perdido
 
-### Dados Armazenados
-- [ ] id (UUID)
-- [ ] title
-- [ ] description
-- [ ] category (enum)
-- [ ] price
-- [ ] image_url (link do storage)
-- [ ] created_by (admin id)
-- [ ] created_at
-- [ ] updated_at
-- [ ] is_active (soft delete)
+### Funcionalidades - Tarefas
+- [ ] Criar tarefa (título, descrição, prioridade, data)
+- [ ] Listar tarefas (filtro por status)
+- [ ] Editar tarefa
+- [ ] Deletar tarefa
+- [ ] Marcar como concluída
+- [ ] Assignar usuário
+
+### Dashboard
+- [ ] Estatísticas de empresas
+- [ ] Estatísticas de contatos
+- [ ] Estatísticas de tarefas
+- [ ] Contadores rápidos
 
 ### Testes Manuais
-- [ ] Criar wallpaper novo → aparece lista ✓
-- [ ] Upload imagem → salva no Storage ✓
-- [ ] Editar wallpaper → atualiza ✓
-- [ ] Deletar wallpaper → desaparece ✓
-- [ ] Validação: title vazio → erro ✓
-- [ ] Validação: arquivo grande → erro ✓
-- [ ] Categoria filtra correto ✓
-- [ ] Preço calcula certo ✓
+- [ ] CRUD Empresas completo ✓
+- [ ] CRUD Contatos completo ✓
+- [ ] Pipeline CRM funciona ✓
+- [ ] CRUD Tarefas completo ✓
+- [ ] Dashboard atualiza ✓
 
 ### Antes do Commit
-- [ ] CRUD 100% funcional
-- [ ] Validações funcionam
-- [ ] Imagens upload funciona
-- [ ] Sem erros SQL/Supabase
+- [ ] Todos os CRUDS funcionando
+- [ ] Sem erros de banco
+- [ ] Validações funcionando
 - [ ] **PEDIR AUTORIZAÇÃO**
 
 **Status:** ⏳ Não iniciado | 🔄 Em progresso | ✅ Completo
@@ -241,22 +237,12 @@
 - [ ] Modelo escolhido
 - [ ] Documentação API estudada
 
-### Nano Banana Setup
-- [ ] API key Nano Banana adicionada .env
-- [ ] Documentação API estudada
-
 ### Código Minimax
-- [ ] `services/minmaxAPI.js` criado
+- [ ] `services/petmaxAI.js` criado
 - [ ] Função `sendMessage(message, context)`
-- [ ] System prompt definido
+- [ ] System prompt definido para ERP+CRM
 - [ ] Histórico de chat em estado local
-- [ ] `components/admin/ChatIA.jsx` criado
-
-### Código Nano Banana
-- [ ] `services/nanobanaAPI.js` criado
-- [ ] Função `generateImage(prompt)`
-- [ ] `components/admin/ImageGenerator.jsx` criado
-- [ ] Preview de imagem gerada
+- [ ] `components/admin/PetmaxAI.jsx` criado
 
 ### Chat IA Funcionalidades
 - [ ] Input para digitar mensagem
@@ -268,35 +254,22 @@
 - [ ] Botão limpar histórico
 - [ ] Error handling
 
-### Image Generator Funcionalidades
-- [ ] Input: descrição/prompt
-- [ ] Botão: "Gerar com IA"
-- [ ] Loading durante geração
-- [ ] Preview imagem gerada
-- [ ] Botão: "Usar esta imagem"
-- [ ] Preenche WallpaperForm com imagem
-- [ ] Histórico últimas 5 imagens
-- [ ] Error handling
-
-### Integração com Wallpaper
-- [ ] Imagem gerada salva em Storage
-- [ ] Pode ser usada como wallpaper
-- [ ] Preço padrão sugerido
-- [ ] Descrição preenchida do prompt
+### Recursos IA
+- [ ] Assistente para dúvidas fiscais
+- [ ] Assistente para dúvidas financeiras
+- [ ] Análises automatizadas
+- [ ] Sugestões baseadas em dados
+- [ ] Relatórios inteligentes
 
 ### Testes Manuais
-- [ ] Chat Minimax responde ✓
+- [ ] Chat Petmax IA responde ✓
 - [ ] Histórico mostra corretamente ✓
-- [ ] Gera imagem com Nano Banana ✓
-- [ ] Preview imagem funciona ✓
-- [ ] Integra com wallpaper form ✓
 - [ ] Error handling funciona ✓
 - [ ] Sem erros API ✓
 
 ### Antes do Commit
 - [ ] Chat funciona 100%
-- [ ] Gerador imagens funciona 100%
-- [ ] Ambas integradas
+- [ ] Sistema IA funcional
 - [ ] Sem erros
 - [ ] **PEDIR AUTORIZAÇÃO**
 
@@ -304,170 +277,106 @@
 
 ---
 
-## 🛍️ FASE 6: GALERIA CLIENTE
-
-### Código
-- [ ] `components/client/WallpaperGallery.jsx` (main)
-- [ ] `components/client/WallpaperCard.jsx` (grid item)
-- [ ] `components/client/WallpaperDetail.jsx` (modal)
-- [ ] `components/client/CategoryFilter.jsx`
-- [ ] `components/client/SearchBar.jsx`
-- [ ] `components/client/Cart.jsx`
-- [ ] `components/client/CartIcon.jsx`
-
-### Context
-- [ ] `context/CartContext.jsx` criado
-- [ ] Função `addToCart(wallpaper)`
-- [ ] Função `removeFromCart(id)`
-- [ ] Função `updateQuantity(id, qty)`
-- [ ] Função `clearCart()`
-- [ ] Função `getTotalPrice()`
-- [ ] Persist em localStorage
-
-### Galeria
-- [ ] Grid responsivo (3-4 colunas desktop)
-- [ ] Grid 2 colunas tablet
-- [ ] Grid 1 coluna mobile
-- [ ] Cada card: imagem, título, preço
-- [ ] Botão "Adicionar ao Carrinho"
-- [ ] Hover effect (zoom, info)
-- [ ] Carrega imagens do Supabase
-
-### Filtros
-- [ ] Dropdown categorias (landscapes, abstract, etc)
-- [ ] Search input por título
-- [ ] Filtros aplicam em tempo real
-- [ ] Botão "Limpar filtros"
-- [ ] Mostra contador resultados
-
-### Modal Detalhes
-- [ ] Clique card → abre modal
-- [ ] Imagem grande
-- [ ] Título + descrição
-- [ ] Preço
-- [ ] Botão "Adicionar ao Carrinho"
-- [ ] Botão "Fechar"
-- [ ] Close ao clicar fora
-
-### Carrinho
-- [ ] Ícone carrinho no header (com contador)
-- [ ] Clique ícone → abre carrinho
-- [ ] Lista items: imagem, título, preço, quantidade
-- [ ] Botão remover item
-- [ ] Input editar quantidade
-- [ ] Subtotal por item
-- [ ] Total geral
-- [ ] Botão "Ir para Checkout"
-- [ ] Persiste ao refresh (localStorage)
-
-### Data
-- [ ] Busca wallpapers ativos (is_active=true)
-- [ ] Ordem: mais recentes primeiro
-- [ ] Sem dados de admin na galeria
-
-### Testes Manuais
-- [ ] Galeria carrega ✓
-- [ ] Imagens mostram ✓
-- [ ] Clique card abre modal ✓
-- [ ] Adicionar ao carrinho funciona ✓
-- [ ] Contador carrinho atualiza ✓
-- [ ] Filtro categoria funciona ✓
-- [ ] Pesquisa funciona ✓
-- [ ] Carrinho persiste ✓
-- [ ] Responsivo (mobile, tablet, desktop) ✓
-
-### Antes do Commit
-- [ ] Tudo responsivo
-- [ ] Tudo funcional
-- [ ] Carrinho persiste
-- [ ] Sem erros
-- [ ] **PEDIR AUTORIZAÇÃO**
-
-**Status:** ⏳ Não iniciado | 🔄 Em progresso | ✅ Completo
-
----
-
-## 💳 FASE 7: PAGAMENTO PIX
+## 💰 FASE 6: MÓDULO FINANCEIRO
 
 ### Supabase
-- [ ] Tabela `orders` criada
-- [ ] Campos: id, user_id, total, status, items, pix_qr, created_at, paid_at
+- [ ] Tabela `receitas` criada
+- [ ] Tabela `despesas` criada
 - [ ] RLS policies configuradas
-- [ ] Índices criados
 
 ### Código
-- [ ] `components/client/CheckoutPIX.jsx`
-- [ ] `components/client/PIXQRCode.jsx`
-- [ ] `components/client/OrderConfirmation.jsx`
-- [ ] `components/admin/SalesReport.jsx`
-- [ ] `components/client/MyOrders.jsx`
-- [ ] `services/orderService.js`
-- [ ] QRCode library (qrcode.react)
+- [ ] `services/financeiroService.js` criado
+- [ ] `components/admin/Financeiro.jsx`
+- [ ] `components/admin/Receitas.jsx`
+- [ ] `components/admin/Despesas.jsx`
+- [ ] `components/admin/FluxoCaixa.jsx`
+- [ ] `components/admin/RelatoriosFinanceiros.jsx`
 
-### Checkout
-- [ ] Página /checkout (após carrinho)
-- [ ] Resumo items
-- [ ] Total final
-- [ ] Botão "Pagar com PIX"
-- [ ] Cálculos corretos
+### Funcionalidades - Receitas
+- [ ] Input: descrição, valor, categoria, data
+- [ ] Listar receitas (filtro por período)
+- [ ] Editar receita
+- [ ] Deletar receita
+- [ ] Marcar como recebido
 
-### PIX - Geração
-- [ ] Chave PIX armazenada (.env)
-- [ ] Gerar QR code (qrcode.react)
-- [ ] Mostrar chave PIX para copiar
-- [ ] Copiar botão (clipboard)
-- [ ] Mostrar valor a transferir
+### Funcionalidades - Despesas
+- [ ] Input: descrição, valor, categoria, fornecedor, data
+- [ ] Listar despesas (filtro por período)
+- [ ] Editar despesa
+- [ ] Deletar despesa
+- [ ] Marcar como pago
 
-### PIX - Confirmação
-- [ ] Input comprovante (texto ou imagem)
-- [ ] Botão "Já paguei, confirmar"
-- [ ] Registra pedido em `orders`
-- [ ] Status = "pending" até admin aprovar
-- [ ] Mostrar pedido criado
+### Funcionalidades - Fluxo de Caixa
+- [ ] Saldo atual (receitas - despesas)
+- [ ] Gráfico de evolução mensal
+- [ ] Projeção de caixa
+- [ ] Relatórios mensais
 
-### Admin - Aprovação
-- [ ] Nova seção "Pedidos Pendentes" (Vendas)
-- [ ] Listar pedidos aguardando aprovação
-- [ ] Ver comprovante
-- [ ] Botão "Aprovar pagamento"
-- [ ] Mudar status para "paid"
-- [ ] Botão "Rejeitar" (motivo opcional)
-
-### Cliente - Histórico
-- [ ] Página /my-orders
-- [ ] Listar todos pedidos do usuário
-- [ ] Colunas: data, items, total, status
-- [ ] Status cores diferentes (pending=amarelo, paid=verde)
-- [ ] Clique pedido → detalhes
-
-### Dados Armazenados
-- [ ] order id (UUID)
-- [ ] user_id (FK)
-- [ ] items (JSON array)
-- [ ] total_amount (BRL)
-- [ ] status (pending/paid/cancelled)
-- [ ] pix_qr_code (base64 ou URL)
-- [ ] pix_key (chave PIX)
-- [ ] payment_proof (texto/imagem)
-- [ ] created_at, paid_at
-- [ ] notes (admin observações)
+### Categorias Financeiras
+- [ ] Receitas: vendas, serviços, investimentos, outros
+- [ ] Despesas: operacional, marketing, jurídico, Payroll, outros
 
 ### Testes Manuais
-- [ ] Carrinho → checkout ✓
-- [ ] Gera QR code PIX ✓
-- [ ] Chave PIX para copiar ✓
-- [ ] Confirma pagamento → pedido criado ✓
-- [ ] Admin vê pedido pendente ✓
-- [ ] Admin aprova → status muda ✓
-- [ ] Cliente vê histórico ✓
-- [ ] Status mostra correto ✓
+- [ ] Registrar receita ✓
+- [ ] Registrar despesa ✓
+- [ ] Fluxo de caixa calcula ✓
+- [ ] Relatórios funcionam ✓
 
 ### Antes do Commit
-- [ ] PIX gera correto
-- [ ] Pedidos registram
-- [ ] Admin aprova
-- [ ] Histórico funciona
-- [ ] Sem erros
+- [ ] Módulo financeiro completo
+- [ ] Sem erros de cálculo
+- [ ] **PEDIR AUTORIZAÇÃO**
+
+**Status:** ⏳ Não iniciado | 🔄 Em progresso | ✅ Completo
+
+---
+
+## ☁️ FASE 7: SISTEMA SAAS
+
+### Supabase
+- [ ] Tabela `plans` criada
+- [ ] Tabela `subscriptions` criada
+- [ ] RLS policies configuradas
+
+### Código
+- [ ] `services/subscriptionService.js` criado
+- [ ] `components/admin/Planos.jsx`
+- [ ] `components/admin/Settings.jsx`
+- [ ] `components/admin/MultiEmpresa.jsx`
+
+### Funcionalidades - Planos
+- [ ] Listar planos (free, basic, pro)
+- [ ] Criar plano
+- [ ] Editar plano
+- [ ] Definir preço
+- [ ] Definir limites (usuários, armazenamento, etc)
+
+### Funcionalidades - Assinaturas
+- [ ] Associar empresa a plano
+- [ ] Verificar status assinatura
+- [ ] Renovar assinatura
+- [ ] Cancelar assinatura
+- [ ] Controle de limites
+
+### Funcionalidades - Multi-empresa
+- [ ] Isolamento de dados por empresa
+- [ ] Filtro por company_id
+- [ ] Super admin vs admin empresa
+
+### Configurações
+- [ ] Configurações por empresa
+- [ ] Upload de logo
+- [ ] Dados da empresa
+
+### Testes Manuais
+- [ ] Planos funcionam ✓
+- [ ] Assinaturas funcionam ✓
+- [ ] Multi-empresa funciona ✓
+- [ ] Isolamento de dados ✓
+
+### Antes do Commit
+- [ ] Sistema SaaS completo
+- [ ] Sem falhas de segurança
 - [ ] **PEDIR AUTORIZAÇÃO**
 
 **Status:** ⏳ Não iniciado | 🔄 Em progresso | ✅ Completo
@@ -481,14 +390,12 @@
 - [ ] Login → funciona completo
 - [ ] Register → funciona completo
 - [ ] Admin panel → funciona completo
-- [ ] Wallpaper CRUD → funciona completo
-- [ ] Chat IA → funciona completo
-- [ ] Gerar imagens → funciona completo
-- [ ] Galeria cliente → funciona completo
-- [ ] Carrinho → funciona completo
-- [ ] Checkout PIX → funciona completo
-- [ ] Histórico pedidos → funciona completo
-- [ ] Admin vendas → funciona completo
+- [ ] Empresas CRUD → funciona completo
+- [ ] Contatos CRM → funciona completo
+- [ ] Tarefas → funciona completo
+- [ ] Financeiro → funciona completo
+- [ ] Petmax IA → funciona completo
+- [ ] Planos SaaS → funciona completo
 
 ### Responsividade
 - [ ] Desktop 1920px ✓
@@ -502,14 +409,12 @@
 - [ ] Open Graph tags
 - [ ] Robots.txt (opcional)
 - [ ] Sitemap.xml (opcional)
-- [ ] Alt text em imagens
 
 ### Performance
 - [ ] Imagens otimizadas
 - [ ] Bundle < 500kb
 - [ ] Load time < 3s
 - [ ] Lazy loading imagens
-- [ ] Cache estratégico
 
 ### Documentação
 - [ ] README.md atualizado
@@ -524,7 +429,6 @@
 - [ ] Toast notifications
 - [ ] Fallback API down
 - [ ] Console sem warnings
-- [ ] Console sem errors
 
 ### Deploy
 - [ ] Todos commits pushados
@@ -540,7 +444,6 @@
 - [ ] TUDO funcional
 - [ ] Site está ONLINE
 - [ ] Admin pode gerenciar
-- [ ] Cliente pode comprar
 - [ ] **PRONTO PARA LANÇAR**
 
 **Status:** ⏳ Não iniciado | 🔄 Em progresso | ✅ Completo
@@ -555,29 +458,22 @@
 - [ ] Testar conexão direto no Supabase dashboard
 - [ ] Verificar RLS policies
 
-### "Imagem não upload"
-- [ ] Verificar tipo arquivo (jpg, png)
-- [ ] Verificar tamanho (< 5MB)
-- [ ] Verificar Storage bucket criado
-- [ ] Verificar RLS policy Storage
+### "Erro de banco de dados"
+- [ ] Verificar se tabela existe
+- [ ] Verificar permissões RLS
+- [ ] Testar query no Supabase SQL Editor
+- [ ] Verificar logs de erro
 
-### "Chat Minimax não responde"
+### "Chat IA não responde"
 - [ ] Verificar API key Minimax
 - [ ] Verificar limite de requisições
 - [ ] Testar com curl/Postman
 - [ ] Verificar prompt do sistema
 
-### "Imagem Nano Banana não gera"
-- [ ] Verificar API key Nano Banana
-- [ ] Verificar quota de imagens
-- [ ] Testar com prompt simples
-- [ ] Verificar resposta de erro
-
-### "Carrinho não persiste"
-- [ ] Verificar localStorage no browser
-- [ ] Verificar console de erros
-- [ ] Testar em aba privada
-- [ ] Verificar Context API
+### "Financeiro não calcula"
+- [ ] Verificar dados no banco
+- [ ] Verificar formato dos valores
+- [ ] Testar cálculo manualmente
 
 ### "Deploy Vercel não funciona"
 - [ ] Verificar variáveis ambiente Vercel

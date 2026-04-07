@@ -9,30 +9,32 @@ Copie, preencha e envie para começar!
 **Copie e preencha com seus dados:**
 
 ```
-Olá Claude! Vou começar o projeto do website de wallpapers.
+Olá Claude! Vou começar o projeto Petmax - ERP+CRM com IA.
 
 INFORMAÇÕES DO PROJETO:
-- Nome: Wallpaper Store
-- Objetivo: Website de venda de wallpapers com painel admin IA
+- Nome: Petmax
+- Objetivo: Sistema ERP+CRM completo com IA para gestão empresarial
+- Módulos: Financeiro, Contatos (CRM), Tarefas, Empresas, Relatórios IA
+- Tipo: SaaS (futuro)
 - Owner: Eu
 - Prazo: ~4 semanas
 
 INFRAESTRUTURA PREPARADA:
 
 ✅ GitHub
-- Repositório criado: https://github.com/Studioneodev/wallstore
+- Repositório criado: https://github.com/Studioneodev/petmax
 - Arquivo: COMECE_AQUI.md lido e entendido
 
 ✅ Vercel
-- Projeto conectado: https://wallstore-henna.vercel.app
-- Deploy automático: ATIVO
+- Projeto conectado: https://petmax.vercel.app
+- Deploy automático: ATIVADO
 
 ✅ Supabase  
 - Projeto criado: https://aiiwxykaewarbpltdxdl.supabase.co
 - URL: https://aiiwxykaewarbpltdxdl.supabase.co
 - ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-✅ Credenciais (armazenadas seguramente em .env.local - NÃO será commitada)
+✅ Credenciais (armazenadas surely em .env.local - NÃO será commitada)
 - Minimax API Key: [fornecida/obtida]
 - Nano Banana API Key: [fornecida/obtida]
 
@@ -57,8 +59,8 @@ Após receber a aprovação minha (Claude), execute no seu terminal:
 
 ### Passo 1: Clone do GitHub
 ```bash
-git clone https://github.com/seu-usuario/wallpaper-store.git
-cd wallpaper-store
+git clone https://github.com/Studioneodev/petmax.git
+cd petmax
 ```
 
 ### Passo 2: Criar .env.local (NÃO commitar!)
@@ -143,7 +145,7 @@ Claude, terminei a preparação local!
 Estou pronto para FASE 1!
 
 Por favor:
-1. Revisar README_WALLPAPER_SITE.md (confirma arquitetura?)
+1. Revisar README_PETMAX.md (confirma arquitetura?)
 2. Revisar PROMPTS_DEVELOPMENT.md (PROMPT_FASE1_SETUP)
 3. Começar a criar estrutura do projeto
 
@@ -161,7 +163,7 @@ Vou responder assim:
 
 FASE 1: Setup Inicial - AUTORIZADO!
 
-Conforme README_WALLPAPER_SITE.md e PROMPT_FASE1_SETUP:
+Conforme README_PETMAX.md e PROMPT_FASE1_SETUP:
 
 ESCOPO:
 - Estrutura de pastas ✓
@@ -198,7 +200,7 @@ Começando... ⏳
 ## ✅ CHECKLIST ANTES DE CADA FASE
 
 **Você faz:**
-- [ ] Leu o README_WALLPAPER_SITE.md?
+- [ ] Leu o README_PETMAX.md?
 - [ ] Entendeu qual é a próxima fase?
 - [ ] Reviu o PROMPT_FASE_X correspondente?
 - [ ] Entendeu o escopo?
@@ -267,7 +269,7 @@ git push origin main
 ✅ FASE X ONLINE!
 
 Commit: [hash do commit]
-Deploy: https://wallpaper-store.vercel.app
+Deploy: https://petmax.vercel.app
 Tudo funcionando: ✓
 
 Próxima: FASE X+1
@@ -392,7 +394,7 @@ Vercel deployando...
 
 ✅ PHASE 1 ONLINE!
 
-URL: https://wallpaper-store.vercel.app
+URL: https://petmax.vercel.app
 
 Próxima: FASE 2
 Quando?

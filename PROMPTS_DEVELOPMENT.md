@@ -1,4 +1,4 @@
-# 🎯 PROMPTS PARA DESENVOLVIMENTO - WALLPAPER STORE
+# 🎯 PROMPTS PARA DESENVOLVIMENTO - PETMAX ERP+CRM
 
 **Use estes prompts para guiar o desenvolvimento de cada fase**  
 **Copie e cole conforme necessário**
@@ -9,7 +9,7 @@
 ### Setup Inicial & Estrutura
 
 ```
-Estou criando um site de venda de wallpapers usando Open Code (Antigravity).
+Estou criando um sistema ERP+CRM completo chamado Petmax usando Open Code (Antigravity).
 
 ESCOPO FASE 1:
 1. Estrutura de pastas inicial (conforme arquivo README)
@@ -21,7 +21,7 @@ ESCOPO FASE 1:
 7. GitHub + Vercel configurado
 
 TÉCNICAS:
-- React com vite
+- React com Vite
 - Context API para estado
 - CSS/Tailwind para estilo (se possível)
 - Supabase client configurado
@@ -31,7 +31,7 @@ IMPORTANTE:
 - NÃO fazer autenticação real ainda (só estrutura)
 - NÃO criar banco de dados ainda
 - Apenas páginas estáticas
-- Home com botões "Login" e "Ver Catálogo"
+- Home com botões "Login" e "Acessar Sistema"
 - Login com formulário básico
 - Register com formulário básico
 
@@ -72,6 +72,8 @@ SUPABASE:
   - email (STRING, UNIQUE)
   - senha (handled by Supabase Auth)
   - is_admin (BOOLEAN, default false)
+  - company_id (UUID, nullable)
+  - role (STRING)
   - created_at (TIMESTAMP)
   - name (STRING)
 
@@ -107,22 +109,24 @@ FASE 3: Painel Admin - Interface Base
 
 ESCOPO:
 1. Layout do painel admin (sidebar + main)
-2. Menu lateral com 5 seções
+2. Menu lateral com 6+ seções
 3. Cada seção com página vazia (prototipo)
 4. Header com dados do admin
 5. Logout button
 6. Responsive (mobile friendly)
 7. Dark mode amigável
 
-MENU ADMIN (5 seções):
+MENU ADMIN (6+ seções):
 - 📊 Dashboard (overview)
-- 🖼️ Wallpapers (gerenciar catalogo)
-- 💬 Chat IA (Minimax)
-- 🎨 Gerar Imagens (Nano Banana)
-- 💰 Vendas & Clientes
+- 🏢 Empresas (gestão)
+- 👥 Contatos (CRM)
+- 📋 Tarefas/Projetos
+- 💰 Financeiro
+- 🤖 Petmax IA
+- ⚙️ Configurações
 
 LAYOUT:
-- Sidebar esquerda (200px)
+- Sidebar esquerda (240px)
 - Main content area
 - Header com nome do admin + logout
 - Footer opcional
@@ -151,76 +155,138 @@ Quando estiver pronto, me avise para fazer commit?
 
 ---
 
-## 📦 PROMPT_FASE4_WALLPAPER_CRUD
-### CRUD Completo de Wallpapers
+## 🏢 PROMPT_FASE4_MODULOS_ERP_CRM
+### Módulos ERP+CRM Completo
 
 ```
-FASE 4: Sistema de Gerenciamento de Wallpapers (Admin)
+FASE 4: Sistema de Gestão Empresarial (ERP+CRM)
 
 ESCOPO:
-1. Tabela Supabase: wallpapers
-2. Upload de imagens (Supabase Storage)
-3. CRUD completo (Create, Read, Update, Delete)
-4. Validações de formulário
-5. Feedback de sucesso/erro
-6. Tabela listando wallpapers
-7. Categorias (dropdowns)
-8. Preço em BRL
+1. Tabela Supabase: companies (Empresas)
+2. Tabela Supabase: contacts (CRM Contatos)
+3. Tabela Supabase: tasks (Tarefas)
+4. Tabela Supabase: projects (Projetos)
+5. CRUD completo para cada módulo
+6. Dashboard com estatísticas
+7. Pipeline de vendas (CRM)
 
-TABELA SUPABASE: wallpapers
+TABELAS SUPABASE:
+
+companies:
+- id (UUID, PK)
+- name (STRING)
+- trade_name (STRING)
+- cnpj (STRING, UNIQUE)
+- cpf (STRING)
+- email (STRING)
+- phone (STRING)
+- address (TEXT)
+- city (STRING)
+- state (STRING)
+- country (STRING)
+- plan (STRING)
+- is_active (BOOLEAN)
+- created_by (UUID)
+- created_at (TIMESTAMP)
+- updated_at (TIMESTAMP)
+
+contacts:
+- id (UUID, PK)
+- company_id (UUID, FK)
+- name (STRING)
+- email (STRING)
+- phone (STRING)
+- whatsapp (STRING)
+- company_name (STRING)
+- position (STRING)
+- source (STRING)
+- status (STRING: lead, cliente, inativo)
+- pipeline_stage (STRING: novo, qualificado, proposta, ganho, perdido)
+- value (DECIMAL)
+- notes (TEXT)
+- tags (ARRAY)
+- assigned_to (UUID)
+- created_by (UUID)
+- created_at (TIMESTAMP)
+
+tasks:
 - id (UUID, PK)
 - title (STRING)
 - description (TEXT)
-- category (ENUM: landscapes, abstract, space, nature, urban, vintage)
-- price (DECIMAL, exemplo: 9.99)
-- image_url (STRING, URL do Storage)
-- image_path (STRING, caminho storage)
-- created_by (UUID, FK users, admin)
+- priority (STRING: baixa, media, alta, urgente)
+- status (STRING: pendente, em_progresso, concluida)
+- due_date (DATE)
+- category (STRING)
+- project_id (UUID)
+- assigned_to (UUID)
+- company_id (UUID)
+- created_by (UUID)
 - created_at (TIMESTAMP)
-- updated_at (TIMESTAMP)
-- is_active (BOOLEAN, default true)
+- completed_at (TIMESTAMP)
 
-SUPABASE STORAGE:
-- Bucket: wallpapers
-- Estrutura: /wallpapers/{user_id}/{uuid}.jpg
-
-RLS POLICIES:
-- Todos leem wallpapers ativos
-- Admin cria/edita/deleta seus próprios
-- Admin vê todos (inclusive inativos)
+projects:
+- id (UUID, PK)
+- name (STRING)
+- description (TEXT)
+- status (STRING)
+- start_date (DATE)
+- end_date (DATE)
+- company_id (UUID)
+- created_by (UUID)
+- created_at (TIMESTAMP)
 
 COMPONENTES:
-- components/admin/WallpaperManager.jsx (main)
-- components/admin/WallpaperForm.jsx (criar/editar)
-- components/admin/WallpaperList.jsx (tabela)
-- components/admin/WallpaperCard.jsx (card individual)
+- components/admin/CompanyManager.jsx
+- components/admin/CompanyForm.jsx
+- components/admin/CompanyList.jsx
+- components/admin/ContactManager.jsx
+- components/admin/ContactForm.jsx
+- components/admin/ContactList.jsx
+- components/admin/SalesPipeline.jsx
+- components/admin/TaskManager.jsx
+- components/admin/TaskForm.jsx
+- components/admin/TaskList.jsx
+- components/admin/ProjectManager.jsx
+- components/admin/Dashboard.jsx
+
+SERVICES:
+- services/companyService.js
+- services/contactService.js
+- services/taskService.js
 
 FUNCIONALIDADES:
-1. Formulário:
-   - Input: title
-   - Input: description
-   - Select: category
-   - Input: price
-   - Input file: upload imagem
-   - Botão: salvar
+1. Empresas:
+   - Criar/Editar/Deletar empresa
+   - Ativar/Inativar
+   - Campos: nome, CNPJ/CPF, contato, endereço
 
-2. Listagem:
-   - Tabela com: título, categoria, preço, imagem thumb
-   - Botão editar (refill formulário)
-   - Botão deletar (com confirmação)
+2. Contatos (CRM):
+   - CRUD completo
+   - Pipeline Kanban (novo → qualificado → proposta → ganho → perdido)
+   - Filtros por status
+   - Buscar por nome/email
+   - Histórico de interações
 
-3. Upload:
-   - Validar tipo imagem (jpg, png)
-   - Validar tamanho (max 5MB)
-   - Mostrar progresso
-   - Gerar UUID para arquivo
+3. Tarefas:
+   - CRUD completo
+   - Prioridade (baixa, média, alta, urgente)
+   - Status (pendente, em progresso, concluída)
+   - Data de entrega
+   - Assignar usuário
+
+4. Dashboard:
+   - Total de empresas
+   - Total de contatos
+   - Contatos por estágio (pipeline)
+   - Tarefas pendentes/concluídas
+   - Gráficos simples
 
 APÓS COMPLETAR:
-- Criar wallpaper novo ✓
-- Editar existente ✓
-- Deletar ✓
-- Upload funciona ✓
-- Lista mostra atualizada ✓
+- CRUD Empresas ✓
+- CRUD Contatos ✓
+- Pipeline CRM ✓
+- CRUD Tarefas ✓
+- Dashboard com stats ✓
 
 Posso começar a implementar?
 ```
@@ -228,30 +294,28 @@ Posso começar a implementar?
 ---
 
 ## 🤖 PROMPT_FASE5_IA_INTEGRATION
-### Integração Minimax + Nano Banana
+### Integração IA - Petmax AI
 
 ```
-FASE 5: Chat IA (Minimax) + Geração de Imagens (Nano Banana)
+FASE 5: Chat com Inteligência Artificial - Petmax AI
 
 ESCOPO:
 1. Integração API Minimax (chat)
-2. Integração API Nano Banana (geração de imagens)
-3. Componente ChatIA com histórico
-4. Componente ImageGenerator
-5. Prompts de sistema contextualizados
-6. Tratamento de erros
-7. Loading states
+2. Componente PetmaxAI com histórico
+3. Prompts de sistema contextualizados para ERP+CRM
+4. Tratamento de erros
+5. Loading states
 
 MINIMAX - CHAT IA:
-- Criar services/minmaxAPI.js
+- Criar services/petmaxAI.js
 - Função: sendMessage(message, context)
 - Context: histórico de chat
-- System prompt: "Você é assistente de designer especializado em wallpapers. Ajude o admin a criar descrições incríveis de wallpapers, sugestões de cores, temas, etc."
+- System prompt: "Você é assistente virtual Petmax, especializado em gestão empresarial, questões fiscais, financeiras e consultoria. Ajude o usuário com dúvidas sobre ERP, CRM, legislação brasileira, impostos, contabilidade, gestão de empresas, etc. Seja claro, objetivo e profissional."
 - Salvar histórico em estado local
 - Mostrar resposta em tempo real
 
-COMPONENTE ChatIA:
-- components/admin/ChatIA.jsx
+COMPONENTE PetmaxAI:
+- components/admin/PetmaxAI.jsx
 - Input para digitar mensagem
 - Botão enviar
 - Histórico exibido acima
@@ -259,210 +323,251 @@ COMPONENTE ChatIA:
 - Mensagens do usuário vs IA diferenciadas (cores)
 - Limpar histórico button
 
-NANO BANANA - GERAÇÃO DE IMAGENS:
-- Criar services/nanobanaAPI.js
-- Função: generateImage(prompt)
-- Prompt: descrição do wallpaper desejado
-- Retorna URL da imagem gerada
-- Salvar em array de imagens geradas
-
-COMPONENTE ImageGenerator:
-- components/admin/ImageGenerator.jsx
-- Input: descrição/prompt
-- Botão: "Gerar com IA"
-- Preview da imagem gerada
-- Botão: "Salvar como Wallpaper" (preenche form WallpaperForm)
-- Histórico de últimas 5 imagens geradas
-
-FLUXO:
-1. Admin digita "um bonito pôr do sol em montanhas"
-2. Chat IA sugere melhorias
-3. Admin clica "Gerar imagem"
-4. Nano Banana cria imagem
-5. Preview é mostrado
-6. Admin clica "Usar esta imagem"
-7. Form WallpaperManager é preenchido com imagem
+RECURSOS IA:
+- Dúvidas fiscais (ICMS, ISS, PIS, COFINS)
+- Dúvidas trabalhistas (CLT, contratos)
+- Dúvidas contábeis (balanço, DRE)
+- Dúvidas financeiras (fluxo de caixa, margem)
+- Consultoria geral empresarial
+- Sugestões de gestão
+- Análise de dados
 
 VARIABLES .env:
 - VITE_MINIMAX_API_KEY
 - VITE_MINIMAX_MODEL (qual modelo usar)
-- VITE_NANOBANA_API_KEY
 
 TRATAMENTO ERROS:
 - API indisponível: mostrar mensagem
-- Quota excedida: avisar admin
+- Quota excedida: avisar usuário
 - Erro de conexão: retry button
 
 APÓS COMPLETAR:
 - Chat funciona ✓
-- Gera imagens ✓
-- Salva histórico ✓
-- Integra com wallpaper form ✓
+- Histórico persiste ✓
+- Respostas contextualizadas ✓
+- Error handling ✓
 
 Vamos codar?
 ```
 
 ---
 
-## 🛍️ PROMPT_FASE6_CLIENT_GALLERY
-### Galeria de Clientes (Compra)
+## 💰 PROMPT_FASE6_FINANCEIRO
+### Módulo Financeiro
 
 ```
-FASE 6: Galeria de Wallpapers para Clientes
+FASE 6: Sistema Financeiro Completo
 
 ESCOPO:
-1. Página de galeria pública
-2. Grid de wallpapers
-3. Filtro por categoria
-4. Pesquisa por título
-5. Cards com imagem, nome, preço
-6. Modal de detalhes
-7. Carrinho (Context API)
-8. Visualizar carrinho
-9. Checkout básico
+1. Tabela Supabase: receitas
+2. Tabela Supabase: despesas
+3. CRUD completo financeiro
+4. Fluxo de caixa
+5. Relatórios financeiros
+6. Gráficos de evolução
+
+TABELAS SUPABASE:
+
+receitas:
+- id (UUID, PK)
+- company_id (UUID, FK)
+- description (STRING)
+- amount (DECIMAL)
+- category (STRING)
+- source (STRING)
+- date (DATE)
+- received (BOOLEAN)
+- paid_at (TIMESTAMP)
+- notes (TEXT)
+- created_by (UUID)
+- created_at (TIMESTAMP)
+
+despesas:
+- id (UUID, PK)
+- company_id (UUID, FK)
+- description (STRING)
+- amount (DECIMAL)
+- category (STRING)
+- supplier (STRING)
+- date (DATE)
+- paid (BOOLEAN)
+- paid_at (TIMESTAMP)
+- notes (TEXT)
+- created_by (UUID)
+- created_at (TIMESTAMP)
 
 COMPONENTES:
-- components/client/WallpaperGallery.jsx (main page)
-- components/client/WallpaperCard.jsx (card grid)
-- components/client/WallpaperDetail.jsx (modal)
-- components/client/CategoryFilter.jsx (filtros)
-- components/client/SearchBar.jsx (pesquisa)
-- components/client/Cart.jsx (visualizar carrinho)
-- components/client/CartIcon.jsx (ícone com contador)
+- components/admin/Financeiro.jsx (dashboard)
+- components/admin/Receitas.jsx
+- components/admin/ReceitaForm.jsx
+- components/admin/ReceitaList.jsx
+- components/admin/Despesas.jsx
+- components/admin/DespesaForm.jsx
+- components/admin/DespesaList.jsx
+- components/admin/FluxoCaixa.jsx
+- components/admin/RelatoriosFinanceiros.jsx
 
-CONTEXT:
-- context/CartContext.jsx
-- Estado: [{ wallpaper_id, title, price, quantity, image_url }]
-- Funções: addToCart, removeFromCart, updateQuantity, clearCart, getTotalPrice
+SERVICES:
+- services/financeiroService.js
 
-GALERIA:
-- Grid responsivo (3-4 colunas desktop, 1-2 mobile)
-- Cada card mostra: imagem, título, preço, botão "Adicionar ao Carrinho"
-- Hover effect: zoom leve, mostrar descrição curta
+CATEGORIAS RECEITAS:
+- Vendas de produtos
+- Prestação de serviços
+- Investimentos
+- Outras receitas
 
-FILTROS:
-- Dropdown: categorias
-- Search input: titulo/descrição
-- Limpar filtros button
-- Contador de resultados
+CATEGORIAS DESPESAS:
+- Custos operacionais
+- Marketing e publicidade
+- Despesas administrativas
+- Folha de pagamento
+- Aluguel e utilidades
+- Tecnologia
+- Jurídico
+- Outras despesas
 
-MODAL DETALHES:
-- Imagem grande
-- Título completo
-- Descrição
-- Preço
-- Botão: "Adicionar ao Carrinho"
-- Botão: "Fechar"
+FUNCIONALIDADES:
+1. Receitas:
+   - Registrar receita
+   - Editar receita
+   - Deletar receita
+   - Marcar como recebido
+   - Filtrar por período
+   - Listar por categoria
 
-CARRINHO:
-- Popup ou página /cart
-- Listar items: imagem, título, preço, quantidade, subtotal
-- Botão remover
-- Input quantidade
-- Total geral
-- Botão: "Ir para Checkout"
+2. Despesas:
+   - Registrar despesa
+   - Editar despesa
+   - Deletar despesa
+   - Marcar como pago
+   - Filtrar por período
+   - Listar por categoria
 
-CHECKOUT:
-- Página /checkout
-- Resumo dos items
-- Total final
-- Botão: "Pagar com PIX" (próxima fase)
+3. Fluxo de Caixa:
+   - Saldo atual (receitas - despesas)
+   - Total receitas período
+   - Total despesas período
+   - Gráfico evolução mensal
+   - Saldo projetado
 
-DATA:
-- Buscar wallpapers ativos do Supabase
-- isActive = true
-- Order by: created_at DESC
+4. Relatórios:
+   - Receitas por categoria
+   - Despesas por categoria
+   - Comparativo mensal
+   - Balanço simplificado
 
 APÓS COMPLETAR:
-- Galeria lista wallpapers ✓
-- Filtros funcionam ✓
-- Pesquisa funciona ✓
-- Adicionar ao carrinho ✓
-- Carrinho persiste (localStorage) ✓
-- Checkout mostra resumo ✓
+- Registrar receita ✓
+- Registrar despesa ✓
+- Fluxo de caixa ✓
+- Relatórios ✓
 
-Começamos?
+Vamos fazer?
 ```
 
 ---
 
-## 💳 PROMPT_FASE7_PIX_PAYMENT
-### Pagamento com PIX
+## ☁️ PROMPT_FASE7_SAAS
+### Sistema SaaS - Multi-empresa
 
 ```
-FASE 7: Sistema de Pagamento PIX
+FASE 7: Sistema SaaS - Multi-empresas e Planos
 
 ESCOPO:
-1. Gerar QR code PIX dinamicamente
-2. Tela de checkout com PIX
-3. Tabela de pedidos (orders) Supabase
-4. Registrar pedido
-5. Verificar pagamento
-6. Histórico de compras (cliente)
-7. Relatório de vendas (admin)
+1. Tabela Supabase: plans (planos)
+2. Tabela Supabase: subscriptions (assinaturas)
+3. Gestão de planos de assinatura
+4. Sistema multi-empresa (multi-tenancy)
+5. Controle de limites por plano
+6. Configurações por empresa
 
-TABELA SUPABASE: orders
+TABELAS SUPABASE:
+
+plans:
 - id (UUID, PK)
-- user_id (UUID, FK users)
-- total_amount (DECIMAL)
-- status (ENUM: pending, paid, cancelled)
-- items (JSON array: [{wallpaper_id, title, price}])
-- pix_qr_code (TEXT, base64 ou URL)
-- pix_key (STRING, chave PIX ou copy-paste)
-- payment_proof (TEXT, comprovante enviado)
+- name (STRING)
+- description (TEXT)
+- price (DECIMAL)
+- interval (STRING: month, year)
+- features (JSONB)
+- limits (JSONB)
+- is_active (BOOLEAN)
 - created_at (TIMESTAMP)
-- paid_at (TIMESTAMP, null até pagar)
-- notes (TEXT, observações do admin)
 
-PIX GERAÇÃO:
-Opção 1 - Manual (mais simples):
-- Admin registra chave PIX no .env
-- Mostrar chave PIX para copiar
-- Mostrar QR code (usar lib qrcode.react)
-- Cliente transfere valor + diz que pagou
-
-Opção 2 - API PIX (mais profissional):
-- Integrar com Itaú/Banco24h/Efí (precisar credenciais)
-- Gerar PIX dinâmico com e2eid
-- Webhook para confirmar pagamento automático
-
-COMEÇAR COM OPÇÃO 1 (mais rápido)
+subscriptions:
+- id (UUID, PK)
+- company_id (UUID, FK)
+- plan_id (UUID, FK)
+- status (STRING: active, cancelled, expired)
+- started_at (TIMESTAMP)
+- expires_at (TIMESTAMP)
+- cancelled_at (TIMESTAMP)
+- created_at (TIMESTAMP)
 
 COMPONENTES:
-- components/client/CheckoutPIX.jsx (formulário PIX)
-- components/client/PIXQRCode.jsx (mostra QR)
-- components/client/OrderConfirmation.jsx (após pagamento)
-- components/admin/SalesReport.jsx (relatório admin)
-- components/client/MyOrders.jsx (histórico cliente)
+- components/admin/Planos.jsx
+- components/admin/PlanoForm.jsx
+- components/admin/PlanoList.jsx
+- components/admin/Settings.jsx
+- components/admin/CompanySettings.jsx
 
-FLUXO CHECKOUT:
-1. Cliente em /checkout vê resumo
-2. Clica "Pagar com PIX"
-3. Tela mostra:
-   - QR Code
-   - Valor total
-   - Chave PIX (copiar)
-   - Input: "Comprovante de pagamento"
-4. Cliente transfere
-5. Clica: "Já paguei, confirmar"
-6. Admin recebe notificação
-7. Admin verifica e marca como "paid"
-8. Cliente recebe email de confirmação
+SERVICES:
+- services/subscriptionService.js
 
-RLS POLICIES:
-- Usuário vê seus próprios pedidos
-- Admin vê todos
-- Criar pedido: qualquer usuário autenticado
-- Aprovar pedido: apenas admin
+PLANOS PADRÃO:
+1. Free (R$ 0/mês)
+   - 1 usuário
+   - 100 contatos
+   - 50 tarefas
+   - Sem IA
+
+2. Basic (R$ 97/mês)
+   - 5 usuários
+   - 1000 contatos
+   - 500 tarefas
+   - IA básica
+
+3. Pro (R$ 297/mês)
+   - Usuários ilimitados
+   - Contatos ilimitados
+   - Tarefas ilimitadas
+   - IA completa
+
+FUNCIONALIDADES:
+1. Planos:
+   - Listar planos
+   - Criar plano
+   - Editar plano
+   - Definir preço
+   - Definir features
+   - Definir limites
+
+2. Assinaturas:
+   - Criar assinatura
+   - Verificar status
+   - Renovar
+   - Cancelar
+   - Verificar limites
+
+3. Multi-empresa:
+   - Isolamento de dados por company_id
+   - Filtros automáticos por empresa
+   - Super admin vs admin empresa
+   - Configurações por empresa
+
+4. Configurações:
+   - Dados da empresa
+   - Logo e cores
+   - Configurações de módulo
+   - Usuários da empresa
 
 APÓS COMPLETAR:
-- Gerar QR code PIX ✓
-- Registrar pedido ✓
-- Mostrar histórico ✓
-- Admin aprovar pagamento ✓
-- Email (opcional) ✓
+- Planos funcionando ✓
+- Assinaturas funcionando ✓
+- Multi-empresa funcionando ✓
+- Isolamento de dados ✓
 
-Vamos fazer?
+Vamos codar?
 ```
 
 ---
@@ -497,19 +602,12 @@ Auth:
 
 Admin:
 - [ ] Só admin pode acessar
-- [ ] CRUD wallpapers 100%
-- [ ] Chat Minimax funciona
-- [ ] Geração imagens Nano Banana funciona
-- [ ] Salvar imagem como wallpaper
-
-Cliente:
-- [ ] Vê galeria completa
-- [ ] Filtros funcionam
-- [ ] Pesquisa funciona
-- [ ] Adiciona ao carrinho
-- [ ] Checkout PIX gera QR
-- [ ] Pedido registrado
-- [ ] Vê histórico de compras
+- [ ] CRUD empresas 100%
+- [ ] CRUD contatos 100%
+- [ ] Pipeline CRM funciona
+- [ ] CRUD tarefas 100%
+- [ ] Financeiro completo
+- [ ] Petmax IA funciona
 
 RESPONSIVIDADE:
 - [ ] Desktop (1920px)
@@ -556,7 +654,6 @@ APÓS COMPLETAR:
 - Sem erros no console ✓
 - Mobile responsivo ✓
 - Admin pode gerenciar ✓
-- Cliente pode comprar ✓
 
 Estamos prontos para lançar!
 ```
@@ -586,14 +683,14 @@ Fase 1 → Fase 2 → Fase 3 → Fase 4 → Fase 5 → Fase 6 → Fase 7 → Fas
 ## 🆘 SE ALGO NÃO ESTIVER CLARO
 
 **Sempre pergunte:**
-- "Que ferramenta exatamente para gerar PIX?"
-- "Qual tabela Supabase está faltando?"
-- "Como salvar imagens em Storage?"
+- "Que estrutura de banco usar?"
+- "Qual tabela está faltando?"
+- "Como fazer o pipeline?"
 
 **Nunca suponha!**
 
 ---
 
-**Versão:** 1.0  
+**Versão:** 2.0  
 **Atualizado:** Hoje  
 **Próxima revisão:** Após Fase 1 completa
