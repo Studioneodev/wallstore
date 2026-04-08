@@ -39,6 +39,7 @@ function RegisterPage() {
       }
 
       if (data.user) {
+        // Inserir na tabela users
         await supabase.from('users').insert([{
           id: data.user.id,
           email: email,
@@ -46,12 +47,16 @@ function RegisterPage() {
           is_admin: false
         }])
         
-        const { error: signInError } = await signIn(email, password)
-        if (signInError) {
-          setSuccess(true)
+        // Verificar se precisa confirmar email
+        if (data.session) {
+          // Login automático funcionou
+          navigate('/home')
         } else {
-          navigate('/admin')
+          // Precisa confirmar email
+          setSuccess(true)
         }
+      } else {
+        setSuccess(true)
       }
     } catch (err) {
       setError(err.message || 'Erro ao criar conta')
