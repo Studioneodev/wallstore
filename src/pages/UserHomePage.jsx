@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { supabase } from '../services/supabaseClient'
+import { useNavigate } from 'react-router-dom'
 
 export default function UserHomePage() {
   const { user, signOut, isAdmin } = useAuth()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
+  const [showLogoutMenu, setShowLogoutMenu] = useState(false)
 
   useEffect(() => {
     setLoading(false)
@@ -67,7 +69,7 @@ export default function UserHomePage() {
               </a>
             )}
             <button 
-              onClick={signOut} 
+              onClick={() => setShowLogoutMenu(!showLogoutMenu)}
               style={{ 
                 background: 'none', 
                 border: '1px solid rgba(255,255,255,0.2)', 
@@ -75,10 +77,69 @@ export default function UserHomePage() {
                 cursor: 'pointer', 
                 fontSize: '0.85rem',
                 padding: '8px 16px',
-                borderRadius: '8px'
+                borderRadius: '8px',
+                position: 'relative'
               }}>
-              Sair
+              Sair ▾
             </button>
+            {showLogoutMenu && (
+              <div style={{
+                position: 'absolute',
+                top: '60px',
+                right: '24px',
+                background: 'rgba(30, 30, 50, 0.98)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '12px',
+                padding: '8px',
+                minWidth: '160px',
+                zIndex: 1001,
+                boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+              }}>
+                <button
+                  onClick={() => {
+                    navigate('/login')
+                    setShowLogoutMenu(false)
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'white',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = 'rgba(99, 102, 241, 0.2)'}
+                  onMouseOut={(e) => e.target.style.background = 'transparent'}
+                >
+                  🔑 Entrar com outro email
+                </button>
+                <button
+                  onClick={() => {
+                    signOut()
+                    navigate('/')
+                    setShowLogoutMenu(false)
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#ef4444',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.2)'}
+                  onMouseOut={(e) => e.target.style.background = 'transparent'}
+                >
+                  🚪 Sair definitivamente
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -134,30 +195,34 @@ export default function UserHomePage() {
 
           {/* CTA Buttons */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button style={{ 
-              padding: '16px 40px',
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '14px',
-              fontSize: '1.1rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              boxShadow: '0 4px 30px rgba(99, 102, 241, 0.4)',
-              transition: 'transform 0.2s'
-            }}>
+            <button 
+              onClick={() => navigate('/pricing')}
+              style={{ 
+                padding: '16px 40px',
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '14px',
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                boxShadow: '0 4px 30px rgba(99, 102, 241, 0.4)',
+                transition: 'transform 0.2s'
+              }}>
               🚀 Quero Ser Premium
             </button>
-            <button style={{ 
-              padding: '16px 40px',
-              background: 'rgba(255,255,255,0.05)',
-              color: 'white',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: '14px',
-              fontSize: '1.1rem',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}>
+            <button 
+              onClick={() => navigate('/pricing')}
+              style={{ 
+                padding: '16px 40px',
+                background: 'rgba(255,255,255,0.05)',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '14px',
+                fontSize: '1.1rem',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}>
               Ver Planos e Preços
             </button>
           </div>
@@ -417,7 +482,9 @@ export default function UserHomePage() {
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.1rem', marginBottom: '32px' }}>
             Comece gratis hoje mesmo. Upgrade quando quiser.
           </p>
-          <button style={{ 
+          <button 
+            onClick={() => navigate('/pricing')}
+            style={{ 
             padding: '18px 48px',
             background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
             color: 'white',

@@ -18,6 +18,7 @@ import ConfiguracoesPage from './pages/admin/ConfiguracoesPage'
 import LogsPage from './pages/admin/LogsPage'
 import PerfilPage from './pages/admin/PerfilPage'
 import NotFoundPage from './pages/NotFoundPage'
+import PricingPage from './pages/PricingPage'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<UserHomePage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route 
