@@ -26,7 +26,8 @@ function RegisterPage() {
         password,
         options: {
           data: { name },
-          emailRedirectTo: `${window.location.origin}/auth/callback`
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailConfirm: false
         }
       })
       
