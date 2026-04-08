@@ -19,18 +19,24 @@ function RegisterPage() {
     setError('')
     
     try {
+      console.log('Iniciando cadastro para:', email)
+      
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { name },
-          emailRedirectTo: window.location.origin
+          emailRedirectTo: `${window.location.origin}/auth/callback`
         }
       })
       
+      console.log('Signup result:', { data, error: signUpError })
+      
       if (signUpError) {
         if (signUpError.message.includes('User already registered')) {
-          setError('Este email já está cadastrado. Faça login ou recupere sua senha.')
+          setError('Este email já está cadastrado. Tente fazer login ou recupere a senha.')
+        } else if (signUpError.message.includes('Password')) {
+          setError('Senha muito fraca. Use pelo menos 6 caracteres.')
         } else {
           setError(signUpError.message)
         }
@@ -38,27 +44,34 @@ function RegisterPage() {
         return
       }
 
-      if (data.user) {
-        // Inserir na tabela users
-        await supabase.from('users').insert([{
-          id: data.user.id,
-          email: email,
-          name: name,
-          is_admin: false
-        }])
-        
-        // Verificar se precisa confirmar email
-        if (data.session) {
-          // Login automático funcionou
-          navigate('/home')
-        } else {
-          // Precisa confirmar email
-          setSuccess(true)
-        }
+      if (!data.user) {
+        setError('Erro ao criar usuário. Tente novamente.')
+        setLoading(false)
+        return
+      }
+
+      // Inserir na tabela users
+      const { error: insertError } = await supabase.from('users').insert([{
+        id: data.user.id,
+        email: email,
+        name: name,
+        is_admin: false
+      }])
+      
+      if (insertError) {
+        console.error('Erro ao inserir na tabela users:', insertError)
+      }
+      
+      // Verificar se precisa confirmar email
+      if (data.session) {
+        // Login automático funcionou (sem confirmação de email)
+        navigate('/home')
       } else {
+        // Precisa confirmar email - mostra mensagem de sucesso
         setSuccess(true)
       }
     } catch (err) {
+      console.error('Erro completo:', err)
       setError(err.message || 'Erro ao criar conta')
     } finally {
       setLoading(false)
@@ -99,11 +112,16 @@ function RegisterPage() {
             </svg>
           </div>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '12px', color: '#1f2937' }}>Conta criada!</h2>
-          <p style={{ color: '#6b7280', marginBottom: '24px' }}>
-            Sua conta foi criada com sucesso. Você já pode usar o sistema.
+          <p style={{ color: '#6b7280', marginBottom: '16px' }}>
+            Sua conta foi criada com sucesso. 
+          </p>
+          <p style={{ color: '#6b7280', marginBottom: '24px', backgroundColor: '#fef3c7', padding: '12px', borderRadius: '8px' }}>
+            📧 <strong>Verifique seu email!</strong><br/>
+            Enviamos um link de confirmação para <strong>{email}</strong>.<br/>
+            Clique no link para ativar sua conta.
           </p>
           <button 
-            onClick={() => navigate('/admin')}
+            onClick={() => navigate('/login')}
             style={{ 
               display: 'inline-block',
               padding: '12px 24px', 
@@ -115,7 +133,7 @@ function RegisterPage() {
               cursor: 'pointer'
             }}
           >
-            Ir para Dashboard
+            Ir para Login
           </button>
         </div>
       </div>
