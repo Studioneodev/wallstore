@@ -1,17 +1,4 @@
 {
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "framework": "vite"
-      }
-    }
-  ],
-  "env": {
-    "VITE_SUPABASE_URL": "@vercel_env_SUPABASE_URL",
-    "VITE_SUPABASE_ANON_KEY": "@vercel_env_SUPABASE_ANON_KEY"
-  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
