@@ -217,6 +217,10 @@ function RegisterPage() {
         <p style={{ marginTop: '20px', textAlign: 'center', color: '#6b7280' }}>
           Já tem conta? <Link to="/login" style={{ color: '#6366f1', fontWeight: '600' }}>Faça login</Link>
         </p>
+        
+        <p style={{ marginTop: '12px', textAlign: 'center', color: '#6b7280' }}>
+          <Link to="/" style={{ color: '#6366f1', fontWeight: '500' }}>← Voltar para Home</Link>
+        </p>
       </div>
     </div>
   )

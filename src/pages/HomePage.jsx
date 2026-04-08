@@ -1,8 +1,31 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import Header from '../components/shared/Header'
 import Footer from '../components/shared/Footer'
 
 export default function HomePage() {
+  const { user, isAdmin, loading } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!loading && user) {
+      if (isAdmin) {
+        navigate('/admin')
+      } else {
+        navigate('/home')
+      }
+    }
+  }, [user, isAdmin, loading, navigate])
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div style={{ color: 'white', fontSize: '1.2rem' }}>Carregando...</div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#ffffff' }}>
       <Header />
@@ -35,35 +58,54 @@ export default function HomePage() {
           </p>
           
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link 
-              to="/login" 
-              style={{ 
-                padding: '16px 32px', 
-                backgroundColor: 'white', 
-                color: '#6366f1', 
-                borderRadius: '12px', 
-                fontWeight: '600',
-                textDecoration: 'none',
-                fontSize: '1rem'
-              }}
-            >
-              Acessar Sistema
-            </Link>
-            <Link 
-              to="/register" 
-              style={{ 
-                padding: '16px 32px', 
-                backgroundColor: 'transparent', 
-                color: 'white', 
-                border: '2px solid white', 
-                borderRadius: '12px', 
-                fontWeight: '600',
-                textDecoration: 'none',
-                fontSize: '1rem'
-              }}
-            >
-              Criar Conta
-            </Link>
+            {user ? (
+              <Link 
+                to={isAdmin ? "/admin" : "/home"} 
+                style={{ 
+                  padding: '16px 32px', 
+                  backgroundColor: 'white', 
+                  color: '#6366f1', 
+                  borderRadius: '12px', 
+                  fontWeight: '600',
+                  textDecoration: 'none',
+                  fontSize: '1rem'
+                }}
+              >
+                {isAdmin ? 'Painel Admin' : 'Meu Painel'}
+              </Link>
+            ) : (
+              <>
+                <Link 
+                  to="/login" 
+                  style={{ 
+                    padding: '16px 32px', 
+                    backgroundColor: 'white', 
+                    color: '#6366f1', 
+                    borderRadius: '12px', 
+                    fontWeight: '600',
+                    textDecoration: 'none',
+                    fontSize: '1rem'
+                  }}
+                >
+                  Acessar Sistema
+                </Link>
+                <Link 
+                  to="/register" 
+                  style={{ 
+                    padding: '16px 32px', 
+                    backgroundColor: 'transparent', 
+                    color: 'white', 
+                    border: '2px solid white', 
+                    borderRadius: '12px', 
+                    fontWeight: '600',
+                    textDecoration: 'none',
+                    fontSize: '1rem'
+                  }}
+                >
+                  Criar Conta
+                </Link>
+              </>
+            )}
           </div>
 
           <div style={{ marginTop: '60px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
